@@ -12,5 +12,4 @@
 @implementation CocoaWagonTest
 
 
-
 @end

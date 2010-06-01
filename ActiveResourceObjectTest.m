@@ -11,11 +11,18 @@
 
 @implementation ActiveResourceObjectTest
 
+-(void)setUp {
+	//
+}
+
+-(void)tearDown {
+	//
+}
 
 
 
-- (void)testFieldAccessors {
-	STAssertTrue(1 == 2, @"ooops");
+
+-(void)testFieldAccessors {
 	
 	/*
 	// This needs to be defined manually in CocoaWagon subclass for now. 
