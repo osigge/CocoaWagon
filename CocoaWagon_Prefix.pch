@@ -1,0 +1,15 @@
+//
+// Prefix header for all source files of the 'CocoaTouchStaticLibrary' target in the 'CocoaTouchStaticLibrary' project.
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
+
+
+// Remove NSLog on release builds
+#ifndef __OPTIMIZE__
+	#define NSLog(...) NSLog(__VA_ARGS__)
+#else
+	#define NSLog(...) {}
+#endif
