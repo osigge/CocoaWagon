@@ -38,14 +38,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* CocoaWagon */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = CocoaWagon;
 		};
 		A36348E611B5307200D85EBE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = A36348DB11B5305700D85EBE /* Unit Test */;
+			remoteGlobalIDString = A36348DB11B5305700D85EBE;
 			remoteInfo = "Unit Test";
 		};
 /* End PBXContainerItemProxy section */
@@ -98,11 +98,11 @@
 			isa = PBXGroup;
 			children = (
 				A36349B211B5518300D85EBE /* Protocols */,
-				A363497D11B54BD800D85EBE /* Tests */,
 				A363493B11B545B400D85EBE /* Categories */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
-				32C88DFF0371C24200C91783 /* Other Sources */,
+				A363497D11B54BD800D85EBE /* Tests */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				A36348DD11B5305700D85EBE /* Unit Test-Info.plist */,
 			);
