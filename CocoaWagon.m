@@ -63,15 +63,10 @@
 
 #pragma mark API Methods
 
--(NSDictionary *)all {
+-(NSArray *)all {
 	
 	NSMutableArray *objects = [NSMutableArray new];
-	
-	// Primarykey will be added by API
-	NSInteger primaryKey = 42;
-	
-	ActiveResourceObject *object = [ActiveResourceObject withPrimaryKey:primaryKey fieldSet:self.fields];	
-	[objects addObject:object];
+
 	return (NSArray *)objects;
 }
 

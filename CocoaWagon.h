@@ -34,6 +34,6 @@
 -(id)initWithResourceURL:(NSString *)anURLString apiKey:(NSString *)aKey;
 
 
--(NSDictionary *)all;
+-(NSArray *)all;
 
 @end

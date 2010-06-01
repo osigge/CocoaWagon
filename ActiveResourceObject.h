@@ -16,8 +16,8 @@
 	
 }
 
-@property(nonatomic, readwrite) NSInteger primaryKey;
-@property(nonatomic, readonly) NSArray *fields;
+@property(nonatomic, assign) NSInteger primaryKey;
+@property(nonatomic, retain) NSArray *fields;
 
 /*
  * Use this initializer to create a new instance.

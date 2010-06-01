@@ -22,13 +22,15 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		A321DAD611B56CD6002B3EA2 /* ActiveResourceObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */; };
+		A321DAEC11B56D29002B3EA2 /* CocoaWagon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC07E0554694100DB518D /* CocoaWagon.a */; };
+		A321DB0A11B56DAA002B3EA2 /* CocoaWagonTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A321DB0911B56DAA002B3EA2 /* CocoaWagonTest.m */; };
 		A36348D511B52FB600D85EBE /* CocoaWagon.h in Headers */ = {isa = PBXBuildFile; fileRef = A36348D311B52FB600D85EBE /* CocoaWagon.h */; };
 		A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */ = {isa = PBXBuildFile; fileRef = A36348D411B52FB600D85EBE /* CocoaWagon.m */; };
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; };
 		A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A363490911B5344000D85EBE /* ActiveResourceObject.m */; };
 		A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */ = {isa = PBXBuildFile; fileRef = A363493C11B545DC00D85EBE /* NSString+Inflection.h */; };
 		A363493F11B545DC00D85EBE /* NSString+Inflection.m in Sources */ = {isa = PBXBuildFile; fileRef = A363493D11B545DC00D85EBE /* NSString+Inflection.m */; };
-		A363498011B54BF400D85EBE /* ActiveResourceObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */; };
 		AA747D9F0F9514B9006C5449 /* CocoaWagon_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -51,6 +53,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A321DB0811B56DAA002B3EA2 /* CocoaWagonTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonTest.h; sourceTree = "<group>"; };
+		A321DB0911B56DAA002B3EA2 /* CocoaWagonTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaWagonTest.m; sourceTree = "<group>"; };
 		A36348D311B52FB600D85EBE /* CocoaWagon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagon.h; sourceTree = "<group>"; };
 		A36348D411B52FB600D85EBE /* CocoaWagon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaWagon.m; sourceTree = "<group>"; };
 		A36348DC11B5305700D85EBE /* Unit Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit Test.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,7 +67,7 @@
 		A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObjectTest.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagon_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libCocoaWagon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCocoaWagon.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC07E0554694100DB518D /* CocoaWagon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = CocoaWagon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A321DAEC11B56D29002B3EA2 /* CocoaWagon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +93,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC07E0554694100DB518D /* libCocoaWagon.a */,
+				D2AAC07E0554694100DB518D /* CocoaWagon.a */,
 				A36348DC11B5305700D85EBE /* Unit Test.octest */,
 			);
 			name = Products;
@@ -150,6 +155,8 @@
 			children = (
 				A363497E11B54BF400D85EBE /* ActiveResourceObjectTest.h */,
 				A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */,
+				A321DB0811B56DAA002B3EA2 /* CocoaWagonTest.h */,
+				A321DB0911B56DAA002B3EA2 /* CocoaWagonTest.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -210,7 +217,7 @@
 			);
 			name = CocoaWagon;
 			productName = CocoaWagon;
-			productReference = D2AAC07E0554694100DB518D /* libCocoaWagon.a */;
+			productReference = D2AAC07E0554694100DB518D /* CocoaWagon.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -264,7 +271,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A363498011B54BF400D85EBE /* ActiveResourceObjectTest.m in Sources */,
+				A321DAD611B56CD6002B3EA2 /* ActiveResourceObjectTest.m in Sources */,
+				A321DB0A11B56DAA002B3EA2 /* CocoaWagonTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +309,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/CocoaWagon.dst;
+				EXECUTABLE_PREFIX = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -318,6 +327,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DSTROOT = /tmp/CocoaWagon.dst;
+				EXECUTABLE_PREFIX = "";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CocoaWagon_Prefix.pch;

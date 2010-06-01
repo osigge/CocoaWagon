@@ -12,23 +12,12 @@
 @implementation ActiveResourceObjectTest
 
 
-- (void)testDynamicMethods {
-	/*
-	ActiveResourceObject *object = [ActiveResourceObject withPrimaryKey:42];	
-	[object setObject:@"foo" forKey:@"bar"];
-	
-	STAssertTrue([[object valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
-	STAssertTrue([object.primaryKey intValue] == 42, @"Could not read correct value for primary key by acessing the dynamically generated property.");
-	STAssertTrue([[object primaryKey] intValue] == 42, @"Could not read correct value for primary key by acessing the dynamically generated method.");
-	STAssertTrue([[object valueForKey:@"foo"] isEqualToString:@"bar"], @"Could not read correct value for generic value from dictionary.");
-	STAssertTrue([object.foo isEqualToString:@"bar"], @"Could not read correct value for generic value by acessing the dynamically generated property.");
-	STAssertTrue([[object foo] isEqualToString:@"bar"], @"Could not read correct value for generic value by acessing the dynamically generated method.");
-	*/
-}
 
 
 - (void)testFieldAccessors {
+	STAssertTrue(1 == 2, @"ooops");
 	
+	/*
 	// This needs to be defined manually in CocoaWagon subclass for now. 
 	// It later should be detected automatically if not specified manually by getting fields from XML response after API call. See http://github.com/yves-vogl/CocoaWagon/issues#issue/2
 	NSMutableArray *fields = [NSMutableArray new];
@@ -41,6 +30,7 @@
 	// Simulating a [CocoaWagon all] and XML parsing at this point...
 	
 	NSMutableArray *rows = [NSMutableArray new];
+	NSDictionary *row;
 	NSString *values[4];
 	
 	
@@ -50,9 +40,9 @@
 	values[2] = @"row 1 woo";
 	values[3] = @"row 1 hoo";
 	
-	NSDictionaray *row = [NSDictionaray dictionaryWithObjects:[NSArray arrayWithObjects:values count:[fields count]] forKeys:fields];	
+	row = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:values count:[fields count]] forKeys:fields];	
 	[rows addObject:row];
-	
+	[row release];
 	
 	// Got row 2...
 	values[0] = @"3";
@@ -60,8 +50,9 @@
 	values[2] = @"row 2 woo";
 	values[3] = @"row 2 hoo";
 	
-	NSDictionaray *row = [NSDictionaray dictionaryWithObjects:[NSArray arrayWithObjects:values count:[fields count]] forKeys:fields];	
+	row = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:values count:[fields count]] forKeys:fields];	
 	[rows addObject:row];
+	[row release];
 	
 	
 	// Got row 3...
@@ -70,11 +61,12 @@
 	values[2] = @"row 3 woo";
 	values[3] = @"row 3 hoo";
 	
-	NSDictionaray *row = [NSDictionaray dictionaryWithObjects:[NSArray arrayWithObjects:values count:[fields count]] forKeys:fields];	
+	row = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:values count:[fields count]] forKeys:fields];	
 	[rows addObject:row];
+	[row release];
 	
 	
-	// Continue with processing the received results
+	// Continue with processing the (simulated) received results
 	
 	NSEnumerator *enumerator = [rows objectEnumerator];
 	id rowObject;
@@ -87,20 +79,29 @@
 		[objects addObject:object];		
 	}
 	
+	[enumerator release];
+	
 	
 	// Let's test ’em.
+		
+	enumerator = [objects objectEnumerator];
+	ActiveResourceObject *activeResourceObject;
+	
+	while (activeResourceObject = [enumerator nextObject]) {
+		NSLog(@"%@", [activeResourceObject objectForKey:@"foo"]);
+		STAssertTrue([[activeResourceObject valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
+	}
+	STAssertTrue([[activeResourceObject valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
+
 	
 	
-	
-	
-	
-	STAssertTrue([[object valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
+	//STAssertTrue([[object valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
 	
 	
 	
 	//STAssertTrue([[object valueForKey:@"foo"] isEqualToString:@"bar"], @"Could not read correct value for generic value from dictionary.");
 	
-	
+	*/
 	
 }
 

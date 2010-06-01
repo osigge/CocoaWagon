@@ -11,7 +11,7 @@
 
 @implementation ActiveResourceObject
 
-@synthesize primaryKey;
+@synthesize primaryKey, fields;
 
 
 +(id)withFieldSet:(NSArray *)aFieldSet {
@@ -19,7 +19,8 @@
 	ActiveResourceObject *object = [ActiveResourceObject new];
 	
 	if (object != nil) {
-		object.primaryKey = nil;
+		object.primaryKey = 0;
+		object.fields = aFieldSet;
 	}
 	
 	return object;
@@ -33,7 +34,7 @@
 			
 	if (object != nil) {
 		object.primaryKey = aKey;
-		[object addEntriesFromDictionary row];
+		[object addEntriesFromDictionary:aRow];
 	}
 	
 	return object;	
@@ -42,33 +43,10 @@
 
 
 
-
-/*
-// ToDo: 
-// ToDo: Add a CocoaWagon instance as delegate and forward calls to "save" etc. to it
-
-
-
-- (void)forwardInvocation:(NSInvocation *)invocation {
-
-    SEL aSelector = [invocation selector];
-		
-	NSString *key = NSStringFromSelector(aSelector);
-		
-	if ([self objectForKey:[key underscore]]) {
-	} else {
-        [self doesNotRecognizeSelector:aSelector];
-	}
+-(void)dealloc {	
+	self.fields = nil;
+	[super dealloc];
 }
 
-
-- (BOOL)respondsToSelector:(SEL)aSelector {
-	if ([super respondsToSelector:aSelector] || [self objectForKey:[NSStringFromSelector(aSelector) underscore]] != nil) {
-		return YES;
-	}	
-	// ToDo: Extend to check for methods defined by associated CocoaWagon instance.
-	return NO;
-}
- */
 
 @end
