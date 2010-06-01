@@ -13,10 +13,12 @@
 @interface CocoaWagon : NSObject {
 	NSURL *resourceURL;
 	NSString *apiKey;
+	NSArray *fields;
 }
 
 @property(nonatomic, retain) NSURL *resourceURL;
 @property(nonatomic, retain) NSString *apiKey;
+@property(nonatomic, retain) NSArray *fields;
 
 /*
  * Use this initializer for public available API methods

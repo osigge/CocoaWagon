@@ -11,7 +11,7 @@
 
 @implementation CocoaWagon
 
-@synthesize resourceURL, apiKey;
+@synthesize resourceURL, apiKey, fields;
 
 -(id)init {	
 	self = [super init];
@@ -22,6 +22,8 @@
 			[self release]; 
 			return nil; 
 		}
+		
+		self.fields = [NSArray arrayWithObject:@"id"];
 	}
 	
 	return self;	
@@ -54,6 +56,7 @@
 -(void)dealloc {	
 	self.resourceURL = nil;
 	self.apiKey = nil;
+	self.fields = nil;
 	[super dealloc];	
 }
 
@@ -62,18 +65,17 @@
 
 -(NSDictionary *)all {
 	
-	NSMutableDictionary *objects = [NSMutableDictionary new];
+	NSMutableArray *objects = [NSMutableArray new];
 	
-	ActiveResourceObject *object = [ActiveResourceObject withPrimaryKey:1];
+	// Primarykey will be added by API
+	NSInteger primaryKey = 42;
 	
-	
-	
-	//Ac contains id as key
-	
-	return (NSDictionary *)objects;
+	ActiveResourceObject *object = [ActiveResourceObject withPrimaryKey:primaryKey fieldSet:self.fields];	
+	[objects addObject:object];
+	return (NSArray *)objects;
 }
 
-// Note: Class attributes are set programmatically and added as Keys to a NSDictionary. The dictionary itself is added to a global dictionary.
+
 // ToDo: Define didRespondWithStatusCode etc. as delegates in a protocol
 
 

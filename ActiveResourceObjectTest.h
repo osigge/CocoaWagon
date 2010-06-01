@@ -17,5 +17,6 @@
 }
 
 - (void)testDynamicMethods;
+- (void)testFieldAccessors;
 
 @end

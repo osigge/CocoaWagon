@@ -11,20 +11,40 @@
 
 @implementation ActiveResourceObject
 
+@synthesize primaryKey;
 
-+(id)withPrimaryKey:(NSInteger)aKey {
+
++(id)withFieldSet:(NSArray *)aFieldSet {
 
 	ActiveResourceObject *object = [ActiveResourceObject new];
 	
 	if (object != nil) {
-		[object setObject:[NSNumber numberWithInt:aKey] forKey:@"primaryKey"];
+		object.primaryKey = nil;
 	}
 	
 	return object;
 }
 
++(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow {
+	
+	NSArray *fields = [aRow allKeys];
+	
+	ActiveResourceObject *object = [ActiveResourceObject withFieldSet:fields];
+			
+	if (object != nil) {
+		object.primaryKey = aKey;
+		[object addEntriesFromDictionary row];
+	}
+	
+	return object;	
+}
 
-// ToDo: Make properties writable and implement dirty object tracking for object updating capabilities
+
+
+
+
+/*
+// ToDo: 
 // ToDo: Add a CocoaWagon instance as delegate and forward calls to "save" etc. to it
 
 
@@ -32,9 +52,7 @@
 - (void)forwardInvocation:(NSInvocation *)invocation {
 
     SEL aSelector = [invocation selector];
-	
-	NSLog(@"Try to access dynamic property: %@", NSStringFromSelector(aSelector));
-	
+		
 	NSString *key = NSStringFromSelector(aSelector);
 		
 	if ([self objectForKey:[key underscore]]) {
@@ -45,10 +63,12 @@
 
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-	if ([super respondsToSelector:aSelector]) {
+	if ([super respondsToSelector:aSelector] || [self objectForKey:[NSStringFromSelector(aSelector) underscore]] != nil) {
 		return YES;
 	}	
+	// ToDo: Extend to check for methods defined by associated CocoaWagon instance.
 	return NO;
 }
+ */
 
 @end
