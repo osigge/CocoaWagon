@@ -17,7 +17,7 @@
 }
 
 -(void)testInitialization;
--(void)testCollectionLoading;
+-(void)testRemoteConnection;
 
 
 @end

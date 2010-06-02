@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSString+Inflection.h"
 #import "ActiveResourceObject.h"
 #import "CocoaWagonDelegate.h"
 #import "ActiveResourceProtocol.h"
-
 
 @interface CocoaWagon : NSObject <ActiveResourceProtocol> {
 	
@@ -43,7 +43,7 @@
 /*
  * Returns YES if connection could be established. Otherwise NO. See CocoaWagonDelegate for accessing NSError which contains corresponding error messages
  */
--(BOOL)all;
+-(BOOL)findAll;
 
 -(NSURL *)resourcesURL;
 

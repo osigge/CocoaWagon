@@ -9,7 +9,7 @@
 #import "NSString+Inflection.h"
 
 
-@implementation NSString(InflectionSupport)
+@implementation NSString(Inflection)
 
 - (NSCharacterSet *)capitals {
 	return [NSCharacterSet uppercaseLetterCharacterSet];
@@ -37,6 +37,14 @@
 	free(buffer);
 	
 	return underscoredString;
+}
+
+-(NSString *)singularize {
+    return [self hasSuffix:@"s"] ? [self substringToIndex:[self length] - 1] : self;
+}
+
+-(NSString *)pluralize {
+    return [self hasSuffix:@"s"] ? self : [self stringByAppendingString:@"s"];
 }
 
 @end

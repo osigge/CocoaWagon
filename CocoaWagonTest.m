@@ -13,7 +13,7 @@
 @implementation CocoaWagonTest
 
 -(void)setUp {
-	[CocoaWagon setBaseURLString:@"http://www.zeig-zunge.de"];
+	[CocoaWagon setBaseURLString:@"http://cocoa-wagon.local"];
 }
 
 -(void)testInitialization {	
@@ -21,10 +21,10 @@
 	STAssertNoThrow([[TestObject alloc] init], @"Should not raise an exception!");	
 }
 
--(void)testCollectionLoading {
-	TestObject *testObject = [[TestObject alloc] initWithDelegate:self];
+-(void)testRemoteConnection {
+	TestObject *testObject = [[[TestObject alloc] initWithDelegate:self] autorelease];
 	STAssertNotNil(testObject, @"Could not initialize test object");
-	[testObject all];
+	STAssertTrue([testObject findAll], @"Something went wrong with the connection");
 }
 
 #pragma mark CocoaWagon Delegates

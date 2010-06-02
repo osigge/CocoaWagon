@@ -29,9 +29,9 @@
 		A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */ = {isa = PBXBuildFile; fileRef = A36348D411B52FB600D85EBE /* CocoaWagon.m */; };
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; };
 		A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A363490911B5344000D85EBE /* ActiveResourceObject.m */; };
-		A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */ = {isa = PBXBuildFile; fileRef = A363493C11B545DC00D85EBE /* NSString+Inflection.h */; };
+		A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */ = {isa = PBXBuildFile; fileRef = A363493C11B545DC00D85EBE /* NSString+Inflection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A363493F11B545DC00D85EBE /* NSString+Inflection.m in Sources */ = {isa = PBXBuildFile; fileRef = A363493D11B545DC00D85EBE /* NSString+Inflection.m */; };
-		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; };
+		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F39E1C11B69B7000EFD2D4 /* TestObject.m */; };
 		A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E8711B6A47D00EFD2D4 /* ActiveResourceProtocol.h */; };
 		AA747D9F0F9514B9006C5449 /* CocoaWagon_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */; settings = {ATTRIBUTES = (Public, ); }; };

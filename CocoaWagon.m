@@ -7,7 +7,6 @@
 //
 
 #import "CocoaWagon.h"
-#import "NSString+Inflection.h"
 
 @implementation CocoaWagon
 
@@ -77,7 +76,7 @@ static NSString *baseURLString;
 
 #pragma mark API Methods
 
--(BOOL)all {
+-(BOOL)findAll {
 	
 	// ToDo: Send API key if it's present
 	
@@ -168,8 +167,8 @@ static NSString *baseURLString;
  * Resource name will be derived from class name
  */
 -(NSString *)resourceName {
-	// ToDo: pluralize
-	return [[[self class] description] underscore];
+
+	return [[[[self class] description] pluralize] underscore];
 }
 
 /*

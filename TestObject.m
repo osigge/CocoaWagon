@@ -10,8 +10,5 @@
 
 @implementation TestObject
 
--(NSString *)resourceName {
-	return @"fotos";
-}
 
 @end

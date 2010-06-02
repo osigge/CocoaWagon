@@ -9,7 +9,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import <UIKit/UIKit.h>
-#import "ActiveResourceObject.h"
+#import "CocoaWagon.h"
 
 
 @interface ActiveResourceObjectTest : SenTestCase {
