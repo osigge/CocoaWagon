@@ -8,12 +8,16 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import <UIKit/UIKit.h>
+#import "CocoaWagon.h"
+#import "TestObject.h"
 
 
-
-@interface CocoaWagonTest : SenTestCase {
+@interface CocoaWagonTest : SenTestCase <CocoaWagonDelegate> {
 
 }
+
+-(void)testInitialization;
+-(void)testCollectionLoading;
 
 
 @end

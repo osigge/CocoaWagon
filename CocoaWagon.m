@@ -84,8 +84,5 @@
 }
 
 
-// ToDo: Define didRespondWithStatusCode etc. as delegates in a protocol
-
-
 
 @end

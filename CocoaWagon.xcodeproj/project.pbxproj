@@ -32,6 +32,7 @@
 		A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */ = {isa = PBXBuildFile; fileRef = A363493C11B545DC00D85EBE /* NSString+Inflection.h */; };
 		A363493F11B545DC00D85EBE /* NSString+Inflection.m in Sources */ = {isa = PBXBuildFile; fileRef = A363493D11B545DC00D85EBE /* NSString+Inflection.m */; };
 		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; };
+		A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F39E1C11B69B7000EFD2D4 /* TestObject.m */; };
 		AA747D9F0F9514B9006C5449 /* CocoaWagon_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */; settings = {ATTRIBUTES = (Public, ); }; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,8 @@
 		A363497E11B54BF400D85EBE /* ActiveResourceObjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceObjectTest.h; sourceTree = "<group>"; };
 		A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObjectTest.m; sourceTree = "<group>"; };
 		A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonDelegate.h; sourceTree = "<group>"; };
+		A3F39E1B11B69B7000EFD2D4 /* TestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestObject.h; sourceTree = "<group>"; };
+		A3F39E1C11B69B7000EFD2D4 /* TestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestObject.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagon_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* CocoaWagon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = CocoaWagon.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +162,8 @@
 				A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */,
 				A321DB0811B56DAA002B3EA2 /* CocoaWagonTest.h */,
 				A321DB0911B56DAA002B3EA2 /* CocoaWagonTest.m */,
+				A3F39E1B11B69B7000EFD2D4 /* TestObject.h */,
+				A3F39E1C11B69B7000EFD2D4 /* TestObject.m */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -277,6 +282,7 @@
 			files = (
 				A321DAD611B56CD6002B3EA2 /* ActiveResourceObjectTest.m in Sources */,
 				A321DB0A11B56DAA002B3EA2 /* CocoaWagonTest.m in Sources */,
+				A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
