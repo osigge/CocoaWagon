@@ -33,6 +33,7 @@
 		A363493F11B545DC00D85EBE /* NSString+Inflection.m in Sources */ = {isa = PBXBuildFile; fileRef = A363493D11B545DC00D85EBE /* NSString+Inflection.m */; };
 		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; };
 		A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F39E1C11B69B7000EFD2D4 /* TestObject.m */; };
+		A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E8711B6A47D00EFD2D4 /* ActiveResourceProtocol.h */; };
 		AA747D9F0F9514B9006C5449 /* CocoaWagon_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */; settings = {ATTRIBUTES = (Public, ); }; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 		A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonDelegate.h; sourceTree = "<group>"; };
 		A3F39E1B11B69B7000EFD2D4 /* TestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestObject.h; sourceTree = "<group>"; };
 		A3F39E1C11B69B7000EFD2D4 /* TestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestObject.m; sourceTree = "<group>"; };
+		A3F39E8711B6A47D00EFD2D4 /* ActiveResourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceProtocol.h; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagon_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* CocoaWagon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = CocoaWagon.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */,
+				A3F39E8711B6A47D00EFD2D4 /* ActiveResourceProtocol.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -188,6 +191,7 @@
 				A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */,
 				A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */,
 				A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */,
+				A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,11 +7,11 @@
 //
 
 #import "CocoaWagon.h"
-
+#import "NSString+Inflection.h"
 
 @implementation CocoaWagon
 
-@synthesize resourceURL, apiKey, fields;
+@synthesize apiKey, fields;
 
 -(id)init {	
 	self = [super init];
@@ -41,21 +41,9 @@
 }
 
 
--(id)initWithResourceURL:(NSString *)anURLString delegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
+-(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
 	
 	self = [self initWithDelegate:theDelegate];
-	
-	if (self != nil) {
-		self.resourceURL = [NSURL URLWithString:anURLString];
-	}
-	
-	return self;
-}
-
-
--(id)initWithResourceURL:(NSString *)anURLString apiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
-	
-	self = [self initWithResourceURL:anURLString delegate:theDelegate];
 	
 	if (self != nil) {
 		self.apiKey = aKey;
@@ -64,10 +52,8 @@
 	return self;
 }
 
-
 -(void)dealloc {	
 	delegate = nil;
-	self.resourceURL = nil;
 	self.apiKey = nil;
 	self.fields = nil;
 	[super dealloc];	
@@ -77,10 +63,38 @@
 #pragma mark API Methods
 
 -(NSArray *)all {
+	/*
+	self.resourceURL + [[self resourceName] + [self format]
 	
+	/fotos.xml
+	*/
 	NSMutableArray *objects = [NSMutableArray new];
 
 	return (NSArray *)objects;
+}
+
+#pragma mark ActiveResource Protocol
+						
+-(NSString *)resourceBaseURL {
+	return @"https://example.com";
+}
+
+/*
+ * Resource name will be derived from class name
+ */
+-(NSString *)resourceName {
+	return [[[self class] description] underscore];
+}
+
+/*
+ * Communication format.
+ */
+-(NSString *)format {
+	return @"xml";
+}
+
+-(NSURL *)resourceURL {
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", [self resourceBaseURL], [self resourceName]]];
 }
 
 

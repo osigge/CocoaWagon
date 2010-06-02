@@ -18,7 +18,7 @@
 }
 
 -(void)testCollectionLoading {
-	TestObject *testObject = [[TestObject alloc] initWithResourceURL:@"" delegate:self];
+	TestObject *testObject = [[TestObject alloc] initWithDelegate:self];
 	STAssertNotNil(testObject, @"Could not initialize test object");
 	[testObject all];
 }

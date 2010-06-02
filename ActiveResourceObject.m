@@ -13,6 +13,7 @@
 
 @synthesize primaryKey, fields;
 
+// ToDo: Forward remote actions to wagon instance unless it's nil
 
 -(id)init {
 	
@@ -25,16 +26,29 @@
 	return self;
 }
 
+-(id)initWithWagon:(CocoaWagon *)aWagon {
+	
+	self = [self init];
+	
+	if (self != nil) {
+		wagon = [aWagon retain];	
+	}
+	
+	return self;
+	
+}
+
 -(void)dealloc {	
 	self.fields = nil;
 	[dictionary release];
+	[wagon release];
 	[super dealloc];
 }
 
 
-+(id)withFieldSet:(NSArray *)aFieldSet {
++(id)withFieldSet:(NSArray *)aFieldSet wagon:(CocoaWagon *)aWagon {
 
-	ActiveResourceObject *object = [ActiveResourceObject new];
+	ActiveResourceObject *object = [[[ActiveResourceObject alloc] initWithWagon:aWagon] autorelease];
 	
 	if (object != nil) {
 		object.primaryKey = 0;
@@ -44,11 +58,11 @@
 	return object;
 }
 
-+(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow {
++(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow wagon:(CocoaWagon *)aWagon {
 	
 	NSArray *fields = [aRow allKeys];
 	
-	ActiveResourceObject *object = [ActiveResourceObject withFieldSet:fields];
+	ActiveResourceObject *object = [ActiveResourceObject withFieldSet:fields wagon:aWagon];
 			
 	if (object != nil) {
 		object.primaryKey = aKey;
@@ -69,5 +83,8 @@
 -(id)objectForKey:(NSString *)aKey {
 	return [dictionary objectForKey:aKey];
 }
+
+
+
 
 @end

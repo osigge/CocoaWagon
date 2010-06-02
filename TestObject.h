@@ -11,6 +11,7 @@
 
 @interface TestObject : CocoaWagon {
 
+	
 }
 
 @end

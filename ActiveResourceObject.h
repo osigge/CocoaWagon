@@ -8,27 +8,30 @@
 
 #import <Foundation/Foundation.h>
 
+@class CocoaWagon;
 
-@interface ActiveResourceObject : NSObject {
 
+@interface ActiveResourceObject : NSObject {	
+	CocoaWagon *wagon;
 	NSInteger primaryKey;
 	NSArray *fields;
-	NSMutableDictionary *dictionary;
-	
+	NSMutableDictionary *dictionary;	
 }
 
 @property(nonatomic, assign) NSInteger primaryKey;
 @property(nonatomic, retain) NSArray *fields;
 
+-(id)initWithWagon:(CocoaWagon *)aWagon;
+
 /*
  * Use this initializer to create a new instance.
  */
-+(id)withFieldSet:(NSArray *)aFieldSet;
++(id)withFieldSet:(NSArray *)aFieldSet wagon:(CocoaWagon *)aWagon;
 
 /*
  * Use this initializer to map a row to a new instance.
  */
-+(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow;
++(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow  wagon:(CocoaWagon *)aWagon;
 
 /*
  * Sets a row value

@@ -65,7 +65,7 @@
 	ActiveResourceObject *object;
 	
 	while (rowObject = [objectEnumerator nextObject]) {
-		object = [ActiveResourceObject withPrimaryKey:[[rowObject objectForKey:@"id"] intValue] row:rowObject];	
+		object = [ActiveResourceObject withPrimaryKey:[[rowObject objectForKey:@"id"] intValue] row:rowObject wagon:nil];	
 		[objects addObject:object];		
 	}
 	
