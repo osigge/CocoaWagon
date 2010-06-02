@@ -11,7 +11,7 @@
 
 @implementation CocoaWagon
 
-@synthesize apiKey, fields;
+@synthesize theConnection, receivedData, apiKey, fields;
 
 -(id)init {	
 	self = [super init];
@@ -62,16 +62,86 @@
 
 #pragma mark API Methods
 
--(NSArray *)all {
-	/*
-	self.resourceURL + [[self resourceName] + [self format]
+-(BOOL)all {
 	
-	/fotos.xml
-	*/
-	NSMutableArray *objects = [NSMutableArray new];
+	// ToDo: Send API key if it's present
+	
+	NSURLRequest *theRequest = [NSURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
 
-	return (NSArray *)objects;
+	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	
+	if (theConnection) {
+		receivedData = [[NSMutableData data] retain];
+		
+		if ([delegate respondsToSelector:@selector(didSendRequest:)] ) {
+			[delegate didSendRequest:theRequest];
+		}
+		
+	} else {		
+		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
+			
+			NSError *error = [NSError errorWithDomain:@"Could not establish connection." 
+												 code:-1 
+											 userInfo:[NSDictionary dictionaryWithObject:theRequest forKey:@"request"]];			
+			
+			[delegate didFailWithError:error];
+			return NO;
+		}		
+	}
+	
+	return YES;
 }
+
+
+#pragma mark NSURLConnection Delegates
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response {
+	
+	if ([delegate respondsToSelector:@selector(didReceiveResponse:)] ) {
+		[delegate didReceiveResponse:response];
+	}
+	
+    [receivedData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	
+	if ([delegate respondsToSelector:@selector(didReceiveData:)] ) {
+		[delegate didReceiveData:data];
+	}
+	
+    [receivedData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+
+    [connection release];
+    [receivedData release];
+	
+	if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
+		[delegate didFailWithError:error];
+	}	
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	
+	if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
+		[delegate willProcessData:receivedData];
+	}	
+	
+	[self processData:receivedData];
+	
+    [connection release];
+    [receivedData release];
+}
+
+
+#pragma mark XML processing
+
+-(void)processData:(NSData *)data {
+	
+}
+
 
 #pragma mark ActiveResource Protocol
 						
@@ -93,8 +163,8 @@
 	return @"xml";
 }
 
--(NSURL *)resourceURL {
-	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", [self resourceBaseURL], [self resourceName]]];
+-(NSURL *)resourcesURL {
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@", [self resourceBaseURL], [self resourceName], [self format]]];
 }
 
 

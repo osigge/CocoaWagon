@@ -15,10 +15,14 @@
 @interface CocoaWagon : NSObject <ActiveResourceProtocol> {
 	
 	__weak NSObject <CocoaWagonDelegate> *delegate;	
+	NSURLConnection *theConnection;
+	NSMutableData *receivedData;
 	NSString *apiKey;
 	NSArray *fields;
 }
 
+@property(nonatomic, retain) NSURLConnection *theConnection;
+@property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, retain) NSString *apiKey;
 @property(nonatomic, retain) NSArray *fields;
 
@@ -31,9 +35,13 @@
 
 -(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
 
+/*
+ * Returns YES if connection could be established. Otherwise NO. See CocoaWagonDelegate for accessing NSError which contains corresponding error messages
+ */
+-(BOOL)all;
 
--(NSArray *)all;
+-(NSURL *)resourcesURL;
 
--(NSURL *)resourceURL;
+-(void)processData:(NSData *)data;
 
 @end

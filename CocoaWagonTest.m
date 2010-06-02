@@ -29,11 +29,8 @@
  * See RFC 2616 10 Status Code Definitions for details
  * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
  */
--(void)didFinishWithResults:(NSArray *)results statusCode:(NSInteger)statusCode {
-	
-	NSRange validStatusCodeRangeIndicatingSuccess = NSMakeRange(200, 206);	
-	STAssertTrue(NSLocationInRange(statusCode, validStatusCodeRangeIndicatingSuccess), @"Should have a 2xx response code.");
-	
+-(void)didFinishWithResults:(NSArray *)results {
+		
 }
 
 -(void)didFailWithError:(NSError *)error {	
@@ -49,6 +46,10 @@
 	NSRange validStatusCodeRange = NSMakeRange(100, 505);	
 	STAssertTrue(NSLocationInRange(statusCode, validStatusCodeRange), @"Every response should have a valid HTTP status code");
 	
+	/*
+	 NSRange validStatusCodeRangeIndicatingSuccess = NSMakeRange(200, 206);	
+	 STAssertTrue(NSLocationInRange(statusCode, validStatusCodeRangeIndicatingSuccess), @"Should have a 2xx response code.");
+	 */	
 }
 
 

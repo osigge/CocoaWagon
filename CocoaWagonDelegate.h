@@ -11,12 +11,19 @@
 
 @protocol CocoaWagonDelegate
 
--(void)didFinishWithResults:(NSArray *)results statusCode:(NSInteger)statusCode;
--(void)didFailWithError:(NSError *)error;
+-(void)didFinishWithResults:(NSArray *)results;
 
 @optional
 
--(void)didRespondWithStatusCode:(NSInteger)statusCode;
+/*
+ * Returns error on connection failure. You may access the underlying NSURLRequest through [[error userInfo] objectForKey:@"request"]
+ */
+-(void)didFailWithError:(NSError *)error;
+-(void)didReceiveResponse:(NSHTTPURLResponse *)response;
+-(void)didSendRequest:(NSURLRequest *)request;
+-(void)didReceiveData:(NSData *)data;
+-(void)willProcessData:(NSData *)data;
 
 
 @end
+
