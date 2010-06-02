@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "ActiveResourceObject.h"
+#import "CocoaWagonDelegate.h"
 
 
 @interface CocoaWagon : NSObject {
+	
+	__weak NSObject <CocoaWagonDelegate> *delegate;
+	
 	NSURL *resourceURL;
 	NSString *apiKey;
 	NSArray *fields;
@@ -20,18 +24,21 @@
 @property(nonatomic, retain) NSString *apiKey;
 @property(nonatomic, retain) NSArray *fields;
 
-/*
- * Use this initializer for public available API methods
- */
 
--(id)initWithResourceURL:(NSString *)anURLString;
-
+-(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
 
 /*
- * Use this initializer if API methods require authentication
+ * Use this initializer for public available remote API methods
  */
 
--(id)initWithResourceURL:(NSString *)anURLString apiKey:(NSString *)aKey;
+-(id)initWithResourceURL:(NSString *)anURLString delegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
+
+
+/*
+ * Use this initializer if remote API methods require authentication
+ */
+
+-(id)initWithResourceURL:(NSString *)anURLString apiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
 
 
 -(NSArray *)all;

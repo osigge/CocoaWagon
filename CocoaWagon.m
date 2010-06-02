@@ -29,10 +29,22 @@
 	return self;	
 }
 
-
--(id)initWithResourceURL:(NSString *)anURLString {
+-(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
+	
 	self = [self init];
+	
+	if (self != nil) {
+		delegate = theDelegate;
+	}
+	
+	return self;	
+}
 
+
+-(id)initWithResourceURL:(NSString *)anURLString delegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
+	
+	self = [self initWithDelegate:theDelegate];
+	
 	if (self != nil) {
 		self.resourceURL = [NSURL URLWithString:anURLString];
 	}
@@ -41,9 +53,9 @@
 }
 
 
--(id)initWithResourceURL:(NSString *)anURLString apiKey:(NSString *)aKey {
+-(id)initWithResourceURL:(NSString *)anURLString apiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
 	
-	self = [self initWithResourceURL:anURLString];
+	self = [self initWithResourceURL:anURLString delegate:theDelegate];
 	
 	if (self != nil) {
 		self.apiKey = aKey;
@@ -54,6 +66,7 @@
 
 
 -(void)dealloc {	
+	delegate = nil;
 	self.resourceURL = nil;
 	self.apiKey = nil;
 	self.fields = nil;
