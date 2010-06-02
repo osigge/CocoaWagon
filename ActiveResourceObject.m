@@ -14,13 +14,31 @@
 @synthesize primaryKey, fields;
 
 
+-(id)init {
+	
+	self = [super init];
+	
+	if (self != nil) {
+		dictionary = [[NSMutableDictionary alloc] init];	
+	}
+	
+	return self;
+}
+
+-(void)dealloc {	
+	self.fields = nil;
+	[dictionary release];
+	[super dealloc];
+}
+
+
 +(id)withFieldSet:(NSArray *)aFieldSet {
 
 	ActiveResourceObject *object = [ActiveResourceObject new];
 	
 	if (object != nil) {
 		object.primaryKey = 0;
-		object.fields = aFieldSet;
+		object.fields = aFieldSet;		
 	}
 	
 	return object;
@@ -40,13 +58,16 @@
 	return object;	
 }
 
-
-
-
--(void)dealloc {	
-	self.fields = nil;
-	[super dealloc];
+-(void)addEntriesFromDictionary:(NSDictionary *)aDictionary {
+	[dictionary addEntriesFromDictionary:aDictionary];
 }
 
+-(void)setObject:(id)anObject forKey:(NSString *)aKey {
+	[dictionary setObject:anObject forKey:aKey];
+}
+
+-(id)objectForKey:(NSString *)aKey {
+	return [dictionary objectForKey:aKey];
+}
 
 @end

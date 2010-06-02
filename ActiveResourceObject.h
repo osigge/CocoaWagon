@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 
-@interface ActiveResourceObject : NSMutableDictionary {
+@interface ActiveResourceObject : NSObject {
 
 	NSInteger primaryKey;
 	NSArray *fields;
+	NSMutableDictionary *dictionary;
 	
 }
 
@@ -29,5 +30,19 @@
  */
 +(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow;
 
+/*
+ * Sets a row value
+ */ 
+-(void)setObject:(id)anObject forKey:(NSString *)aKey;
+
+/*
+ * Gets a row value
+ */ 
+-(id)objectForKey:(NSString *)aKey;
+
+/*
+ * Sets a complete row by assigning values from an dictionary by using its keys to identify the corresponding fields
+ */ 
+-(void)addEntriesFromDictionary:(NSDictionary *)aDictionary;
 
 @end
