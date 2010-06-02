@@ -12,6 +12,10 @@
 
 @implementation CocoaWagonTest
 
+-(void)setUp {
+	[CocoaWagon setBaseURLString:@"http://www.zeig-zunge.de"];
+}
+
 -(void)testInitialization {	
 	STAssertThrows([[CocoaWagon alloc] init], @"Should raise exception!");
 	STAssertNoThrow([[TestObject alloc] init], @"Should not raise an exception!");	

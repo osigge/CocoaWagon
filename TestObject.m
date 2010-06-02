@@ -10,10 +10,6 @@
 
 @implementation TestObject
 
--(NSString *)resourceBaseURL {
-	return @"http://www.zeig-zunge.de";
-}
-
 -(NSString *)resourceName {
 	return @"fotos";
 }

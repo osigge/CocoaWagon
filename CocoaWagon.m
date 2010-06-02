@@ -11,6 +11,8 @@
 
 @implementation CocoaWagon
 
+static NSString *baseURLString;
+
 @synthesize theConnection, receivedData, apiKey, fields;
 
 -(id)init {	
@@ -57,6 +59,19 @@
 	self.apiKey = nil;
 	self.fields = nil;
 	[super dealloc];	
+}
+
++(void)setBaseURLString:(NSString *)aBaseURLString  {
+	
+	if (aBaseURLString != baseURLString) {
+		[baseURLString release];
+		baseURLString = [aBaseURLString retain];
+	}
+
+}
+
++(NSString *)baseURLString {
+	return [[baseURLString retain] autorelease];
 }
 
 
@@ -146,13 +161,14 @@
 #pragma mark ActiveResource Protocol
 						
 -(NSString *)resourceBaseURL {
-	return @"https://example.com";
+	return [CocoaWagon baseURLString];
 }
 
 /*
  * Resource name will be derived from class name
  */
 -(NSString *)resourceName {
+	// ToDo: pluralize
 	return [[[self class] description] underscore];
 }
 

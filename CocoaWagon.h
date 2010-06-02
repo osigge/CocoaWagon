@@ -19,12 +19,17 @@
 	NSMutableData *receivedData;
 	NSString *apiKey;
 	NSArray *fields;
+	
 }
 
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, retain) NSString *apiKey;
 @property(nonatomic, retain) NSArray *fields;
+
+
++(void)setBaseURLString:(NSString *)aBaseURLString;
++(NSString *)baseURLString;
 
 
 -(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
