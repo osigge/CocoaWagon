@@ -11,22 +11,8 @@
 
 @implementation ActiveResourceObjectTest
 
--(void)setUp {
-	//
-}
-
--(void)tearDown {
-	//
-}
-
-
-
-
 -(void)testFieldAccessors {
 	
-	/*
-	// This needs to be defined manually in CocoaWagon subclass for now. 
-	// It later should be detected automatically if not specified manually by getting fields from XML response after API call. See http://github.com/yves-vogl/CocoaWagon/issues#issue/2
 	NSMutableArray *fields = [NSMutableArray new];
 	[fields addObject:@"id"];
 	[fields addObject:@"foo"];
@@ -35,7 +21,6 @@
 		
 	
 	// Simulating a [CocoaWagon all] and XML parsing at this point...
-	
 	NSMutableArray *rows = [NSMutableArray new];
 	NSDictionary *row;
 	NSString *values[4];
@@ -72,44 +57,48 @@
 	[rows addObject:row];
 	[row release];
 	
-	
-	// Continue with processing the (simulated) received results
-	
-	NSEnumerator *enumerator = [rows objectEnumerator];
+		
+	NSEnumerator *objectEnumerator = [rows objectEnumerator];
 	id rowObject;
 	
 	NSMutableArray *objects = [NSMutableArray new];
 	ActiveResourceObject *object;
 	
-	while (rowObject = [enumerator nextObject]) {
-		object = [ActiveResourceObject withPrimaryKey:[[rowObject valueForKey:@"id"] intValue] row:rowObject];	
+	while (rowObject = [objectEnumerator nextObject]) {
+		object = [ActiveResourceObject withPrimaryKey:[[rowObject objectForKey:@"id"] intValue] row:rowObject];	
 		[objects addObject:object];		
 	}
 	
-	[enumerator release];
 	
-	
-	// Let's test ’em.
-		
-	enumerator = [objects objectEnumerator];
+	int index;	
 	ActiveResourceObject *activeResourceObject;
+	id objectValue;
+	NSString *assignedValue;
 	
-	while (activeResourceObject = [enumerator nextObject]) {
-		NSLog(@"%@", [activeResourceObject objectForKey:@"foo"]);
-		STAssertTrue([[activeResourceObject valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
-	}
-	STAssertTrue([[activeResourceObject valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
+	for (index = 0; index < [objects count]; index++) {			
+		
+		activeResourceObject = [objects objectAtIndex:index];		
+		STAssertEquals(activeResourceObject.primaryKey, [[activeResourceObject objectForKey:@"id"] intValue], @"Primary key doesn't match row value");
 
-	
-	
-	//STAssertTrue([[object valueForKey:@"primaryKey"] intValue] == 42, @"Could not read correct value for primary key from dictionary.");
-	
-	
-	
-	//STAssertTrue([[object valueForKey:@"foo"] isEqualToString:@"bar"], @"Could not read correct value for generic value from dictionary.");
-	
-	*/
-	
+		objectValue = [activeResourceObject objectForKey:@"foo"];
+		assignedValue = [NSString stringWithFormat:@"row %i foo", index + 1];		
+		STAssertTrue([objectValue isEqualToString:assignedValue], [NSString stringWithFormat:@"Object value (%@) doesn't match assigned row value (%@)", objectValue, assignedValue]);		
+		[objectValue release];
+		//[assignedValue release];
+		
+		objectValue = [activeResourceObject objectForKey:@"woo"];
+		assignedValue = [NSString stringWithFormat:@"row %i woo", index + 1];
+		STAssertTrue([objectValue isEqualToString:assignedValue], [NSString stringWithFormat:@"Object value (%@) doesn't match assigned row value (%@)", objectValue, assignedValue]);
+		[objectValue release];
+		//[assignedValue release];
+		
+		objectValue = [activeResourceObject objectForKey:@"hoo"];
+		assignedValue = [NSString stringWithFormat:@"row %i hoo", index + 1];		
+		STAssertTrue([objectValue isEqualToString:assignedValue], [NSString stringWithFormat:@"Object value (%@) doesn't match assigned row value (%@)", objectValue, assignedValue]);
+		[objectValue release];
+		//[assignedValue release];
+	}
+
 }
 
 @end
