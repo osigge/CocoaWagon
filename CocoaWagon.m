@@ -253,7 +253,7 @@ static NSString *baseURLString;
  * Resource name will be derived from class name
  */
 -(NSString *)resourcesName {
-	return [self resourceName];
+	return [[self resourceName] pluralize];
 }
 
 -(NSString *)resourceName {
