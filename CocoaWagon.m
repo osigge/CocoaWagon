@@ -27,10 +27,10 @@
 	for (int i = 0; i < [self length]; i++) {
 		currentChar = [NSString stringWithCharacters:buffer + i length:1];
 		
-		if([[self capitals] characterIsMember:buffer[i]]) {
+		if([[self capitals] characterIsMember:buffer[i]] && i > 0) {
 			[underscoredString appendFormat:@"_%@", [currentChar lowercaseString]];
 		} else {
-			[underscoredString appendString:currentChar];
+			[underscoredString appendString:[currentChar lowercaseString]];
 		}
 	}
 	
@@ -40,11 +40,11 @@
 }
 
 -(NSString *)singularize {
-    return [self hasSuffix:@"s"] ? [self substringToIndex:[self length] - 1] : self;
+    return [[self lowercaseString] hasSuffix:@"s"] ? [self substringToIndex:[self length] - 1] : self;
 }
 
 -(NSString *)pluralize {
-    return [self hasSuffix:@"s"] ? self : [self stringByAppendingString:@"s"];
+    return [[self lowercaseString] hasSuffix:@"s"] ? self : [self stringByAppendingString:@"s"];
 }
 
 @end
@@ -253,7 +253,7 @@ static NSString *baseURLString;
  * Resource name will be derived from class name
  */
 -(NSString *)resourcesName {
-	return [[self resourceName] pluralize];
+	return [self resourceName];
 }
 
 -(NSString *)resourceName {

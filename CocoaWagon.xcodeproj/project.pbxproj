@@ -30,8 +30,6 @@
 		A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */ = {isa = PBXBuildFile; fileRef = A36348D411B52FB600D85EBE /* CocoaWagon.m */; };
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A363490911B5344000D85EBE /* ActiveResourceObject.m */; };
-		A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */ = {isa = PBXBuildFile; fileRef = A363493C11B545DC00D85EBE /* NSString+Inflection.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		A363493F11B545DC00D85EBE /* NSString+Inflection.m in Sources */ = {isa = PBXBuildFile; fileRef = A363493D11B545DC00D85EBE /* NSString+Inflection.m */; };
 		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F39E1C11B69B7000EFD2D4 /* TestObject.m */; };
 		A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E8711B6A47D00EFD2D4 /* ActiveResourceProtocol.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -67,8 +65,6 @@
 		A36348DD11B5305700D85EBE /* Unit Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Test-Info.plist"; sourceTree = "<group>"; };
 		A363490811B5344000D85EBE /* ActiveResourceObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceObject.h; sourceTree = "<group>"; };
 		A363490911B5344000D85EBE /* ActiveResourceObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObject.m; sourceTree = "<group>"; };
-		A363493C11B545DC00D85EBE /* NSString+Inflection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Inflection.h"; sourceTree = "<group>"; };
-		A363493D11B545DC00D85EBE /* NSString+Inflection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Inflection.m"; sourceTree = "<group>"; };
 		A363497E11B54BF400D85EBE /* ActiveResourceObjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceObjectTest.h; sourceTree = "<group>"; };
 		A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObjectTest.m; sourceTree = "<group>"; };
 		A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonDelegate.h; sourceTree = "<group>"; };
@@ -154,8 +150,6 @@
 		A363493B11B545B400D85EBE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				A363493C11B545DC00D85EBE /* NSString+Inflection.h */,
-				A363493D11B545DC00D85EBE /* NSString+Inflection.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -194,7 +188,6 @@
 				AA747D9F0F9514B9006C5449 /* CocoaWagon_Prefix.pch in Headers */,
 				A36348D511B52FB600D85EBE /* CocoaWagon.h in Headers */,
 				A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */,
-				A363493E11B545DC00D85EBE /* NSString+Inflection.h in Headers */,
 				A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */,
 				A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */,
 			);
@@ -305,7 +298,6 @@
 			files = (
 				A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */,
 				A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */,
-				A363493F11B545DC00D85EBE /* NSString+Inflection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,8 +12,6 @@
 
 
 @interface TestNSString_Inflection : SenTestCase {
-
-	NSString *testString;
 	
 }
 
