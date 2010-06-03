@@ -8,11 +8,53 @@
 
 #import "CocoaWagon.h"
 
+
+@implementation NSString (InflectionSupport)
+
+- (NSCharacterSet *)capitals {
+	return [NSCharacterSet uppercaseLetterCharacterSet];
+}
+
+-(NSString *)underscore {
+	
+	unichar *buffer = calloc([self length], sizeof(unichar));
+	[self getCharacters:buffer];
+	
+	NSMutableString *underscoredString = [NSMutableString string];
+	
+	NSString *currentChar;
+	
+	for (int i = 0; i < [self length]; i++) {
+		currentChar = [NSString stringWithCharacters:buffer + i length:1];
+		
+		if([[self capitals] characterIsMember:buffer[i]]) {
+			[underscoredString appendFormat:@"_%@", [currentChar lowercaseString]];
+		} else {
+			[underscoredString appendString:currentChar];
+		}
+	}
+	
+	free(buffer);
+	
+	return underscoredString;
+}
+
+-(NSString *)singularize {
+    return [self hasSuffix:@"s"] ? [self substringToIndex:[self length] - 1] : self;
+}
+
+-(NSString *)pluralize {
+    return [self hasSuffix:@"s"] ? self : [self stringByAppendingString:@"s"];
+}
+
+@end
+
+
 @implementation CocoaWagon
 
 static NSString *baseURLString;
 
-@synthesize theConnection, receivedData, apiKey, fields;
+@synthesize theConnection, receivedData, xmlParser, apiKey, fields, rows;
 
 -(id)init {	
 	self = [super init];
@@ -25,6 +67,7 @@ static NSString *baseURLString;
 		}
 		
 		self.fields = [NSArray arrayWithObject:@"id"];
+		self.rows = [NSMutableArray new];
 	}
 	
 	return self;	
@@ -55,8 +98,12 @@ static NSString *baseURLString;
 
 -(void)dealloc {	
 	delegate = nil;
+	self.theConnection = nil;
+	self.receivedData = nil;
+	self.xmlParser = nil;
 	self.apiKey = nil;
 	self.fields = nil;
+	self.rows = nil;
 	[super dealloc];	
 }
 
@@ -66,7 +113,7 @@ static NSString *baseURLString;
 		[baseURLString release];
 		baseURLString = [aBaseURLString retain];
 	}
-
+	
 }
 
 +(NSString *)baseURLString {
@@ -81,7 +128,7 @@ static NSString *baseURLString;
 	// ToDo: Send API key if it's present
 	
 	NSURLRequest *theRequest = [NSURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
-
+	
 	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	
 	if (theConnection) {
@@ -92,6 +139,7 @@ static NSString *baseURLString;
 		}
 		
 	} else {		
+		
 		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
 			
 			NSError *error = [NSError errorWithDomain:@"Could not establish connection." 
@@ -128,7 +176,7 @@ static NSString *baseURLString;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-
+	
     [connection release];
     [receivedData release];
 	
@@ -142,9 +190,19 @@ static NSString *baseURLString;
 	if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
 		[delegate willProcessData:receivedData];
 	}	
-	
-	[self processData:receivedData];
-	
+		
+	if (![self processData:receivedData]) {
+		
+		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
+			
+			NSError *error = [NSError errorWithDomain:@"Could not parse XML data." 
+												 code:-1 
+											 userInfo:[NSDictionary dictionaryWithObject:receivedData forKey:@"data"]];
+			
+			[delegate didFailWithError:error];
+		}	
+	}
+
     [connection release];
     [receivedData release];
 }
@@ -152,13 +210,41 @@ static NSString *baseURLString;
 
 #pragma mark XML processing
 
--(void)processData:(NSData *)data {
+-(BOOL)processData:(NSData *)data {	
+	self.xmlParser = [[NSXMLParser alloc] initWithData:data];
+	[self.xmlParser setDelegate:self];
+    [self.xmlParser setShouldResolveExternalEntities:YES];
+	return [self.xmlParser parse];
+}
+
+#pragma mark NSXMLParser Delegates
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	
+    if ([elementName isEqualToString:[self resourceName]]) {
+		ActiveResourceObject *row = [ActiveResourceObject withFieldSet:self.fields wagon:self];
+		
+		// <location rating="2" photo_id="9" user_id="24">/system/photos/9/small/P4210023.jpg?1271874392</location>
+		
+		// ToDo:
+		
+		// 1. Add nodevalue for key "location"
+		// 2. Add attribute values for each attribute
+		// 3. Add those things above only if their keys is included in keys
+		
+		//[row setObject:<#(id)anObject#> forKey:<#(NSString *)aKey#>];
+		
+		[self.rows addObject:row];
+    }
 }
 
 
 #pragma mark ActiveResource Protocol
-						
+
+-(NSURL *)resourcesURL {
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@", [self resourceBaseURL], [self resourcesName], [self format]]];
+}
+
 -(NSString *)resourceBaseURL {
 	return [CocoaWagon baseURLString];
 }
@@ -166,9 +252,12 @@ static NSString *baseURLString;
 /*
  * Resource name will be derived from class name
  */
--(NSString *)resourceName {
+-(NSString *)resourcesName {
+	return [[self resourceName] pluralize];
+}
 
-	return [[[[self class] description] pluralize] underscore];
+-(NSString *)resourceName {
+	return [[[self class] description] underscore];
 }
 
 /*
@@ -176,10 +265,6 @@ static NSString *baseURLString;
  */
 -(NSString *)format {
 	return @"xml";
-}
-
--(NSURL *)resourcesURL {
-	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@", [self resourceBaseURL], [self resourceName], [self format]]];
 }
 
 

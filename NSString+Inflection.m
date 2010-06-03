@@ -9,7 +9,7 @@
 #import "NSString+Inflection.h"
 
 
-@implementation NSString(Inflection)
+@implementation NSString (InflectionSupport)
 
 - (NSCharacterSet *)capitals {
 	return [NSCharacterSet uppercaseLetterCharacterSet];

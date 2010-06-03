@@ -11,11 +11,9 @@
 
 @protocol ActiveResourceProtocol
 
-
-@optional
-
 -(NSString *)resourceBaseURL;
 -(NSString *)resourceName;
+-(NSString *)resourcesName;
 -(NSString *)format;
 
 @end

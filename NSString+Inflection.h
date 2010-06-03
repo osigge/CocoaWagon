@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface NSString (Inflection)
+@interface NSString (InflectionSupport)
 
 -(NSString *)underscore;
 -(NSString *)singularize;

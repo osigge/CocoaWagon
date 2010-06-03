@@ -7,25 +7,38 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NSString+Inflection.h"
+//#import "NSString+Inflection.h"
 #import "ActiveResourceObject.h"
 #import "CocoaWagonDelegate.h"
 #import "ActiveResourceProtocol.h"
+
+@interface NSString (InflectionSupport)
+
+-(NSString *)underscore;
+-(NSString *)singularize;
+-(NSString *)pluralize;
+
+@end
+
 
 @interface CocoaWagon : NSObject <ActiveResourceProtocol> {
 	
 	__weak NSObject <CocoaWagonDelegate> *delegate;	
 	NSURLConnection *theConnection;
 	NSMutableData *receivedData;
+	NSXMLParser *xmlParser;
 	NSString *apiKey;
 	NSArray *fields;
+	NSMutableArray *rows;
 	
 }
 
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
+@property(nonatomic, retain) NSXMLParser *xmlParser;
 @property(nonatomic, retain) NSString *apiKey;
 @property(nonatomic, retain) NSArray *fields;
+@property(nonatomic, retain) NSMutableArray *rows;
 
 
 +(void)setBaseURLString:(NSString *)aBaseURLString;
@@ -47,6 +60,6 @@
 
 -(NSURL *)resourcesURL;
 
--(void)processData:(NSData *)data;
+-(BOOL)processData:(NSData *)data;
 
 @end
