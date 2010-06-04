@@ -171,6 +171,8 @@ static NSString *baseURLString;
 	if (theConnection) {
 		receivedData = [[NSMutableData data] retain];
 		
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+		
 		if ([delegate respondsToSelector:@selector(didSendRequest:)] ) {
 			[delegate didSendRequest:theRequest];
 		}
@@ -214,6 +216,8 @@ static NSString *baseURLString;
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+	
     [connection release];
     [receivedData release];
 	
@@ -223,6 +227,8 @@ static NSString *baseURLString;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	
 	if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
 		[delegate willProcessData:receivedData];
