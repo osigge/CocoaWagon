@@ -7,11 +7,10 @@
 //
 
 #import "ActiveResourceObject.h"
-#import "NSString+Inflection.h"
 
 @implementation ActiveResourceObject
 
-@synthesize primaryKey, fields;
+@synthesize primaryKey;
 
 // ToDo: Forward remote actions to wagon instance unless it's nil
 
@@ -39,20 +38,18 @@
 }
 
 -(void)dealloc {	
-	self.fields = nil;
 	[dictionary release];
 	[wagon release];
 	[super dealloc];
 }
 
 
-+(id)withFieldSet:(NSArray *)aFieldSet wagon:(CocoaWagon *)aWagon {
++(id)withWagon:(CocoaWagon *)aWagon {
 
 	ActiveResourceObject *object = [[[ActiveResourceObject alloc] initWithWagon:aWagon] autorelease];
 	
 	if (object != nil) {
 		object.primaryKey = 0;
-		object.fields = aFieldSet;		
 	}
 	
 	return object;
@@ -60,9 +57,7 @@
 
 +(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow wagon:(CocoaWagon *)aWagon {
 	
-	NSArray *fields = [aRow allKeys];
-	
-	ActiveResourceObject *object = [ActiveResourceObject withFieldSet:fields wagon:aWagon];
+	ActiveResourceObject *object = [ActiveResourceObject withWagon:aWagon];
 			
 	if (object != nil) {
 		object.primaryKey = aKey;
@@ -84,6 +79,10 @@
 	return [dictionary objectForKey:aKey];
 }
 
+
+-(NSArray *)fields {
+	return [dictionary allKeys];
+}
 
 
 

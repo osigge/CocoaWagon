@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-//#import "NSString+Inflection.h"
 #import "ActiveResourceObject.h"
 #import "CocoaWagonDelegate.h"
 #import "ActiveResourceProtocol.h"
 
 @interface NSString (InflectionSupport)
 
+-(NSCharacterSet *)capitals;
+-(NSString *)camelize;
 -(NSString *)underscore;
 -(NSString *)singularize;
 -(NSString *)pluralize;
@@ -27,22 +28,32 @@
 	NSURLConnection *theConnection;
 	NSMutableData *receivedData;
 	NSXMLParser *xmlParser;
+	NSString *currentElementName;
+	BOOL currentElementHasNodeValue;
+	ActiveResourceObject *currentObject;
+	NSString *currentFieldName;
+	id currentFieldValue;
 	NSString *apiKey;
-	NSArray *fields;
 	NSMutableArray *rows;
-	
 }
 
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, retain) NSXMLParser *xmlParser;
+@property(nonatomic, retain) NSString *currentElementName;
+@property(nonatomic, assign) BOOL currentElementHasNodeValue;
+@property(nonatomic, retain) ActiveResourceObject *currentObject;
+@property(nonatomic, retain) NSString *currentFieldName;
+@property(nonatomic, retain) id currentFieldValue;
 @property(nonatomic, retain) NSString *apiKey;
-@property(nonatomic, retain) NSArray *fields;
 @property(nonatomic, retain) NSMutableArray *rows;
+
 
 
 +(void)setBaseURLString:(NSString *)aBaseURLString;
 +(NSString *)baseURLString;
+
++(BOOL)willPaginate;
 
 
 -(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate;

@@ -15,6 +15,35 @@
 	return [NSCharacterSet uppercaseLetterCharacterSet];
 }
 
+- (NSString *)camelize {
+	
+	unichar *buffer = calloc([self length], sizeof(unichar));
+	[self getCharacters:buffer ];
+	NSMutableString *string = [NSMutableString string];
+	
+	BOOL capitalizeNext = NO;
+	NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"-_"];
+	
+	for (int i = 0; i < [self length]; i++) {
+		NSString *currentChar = [NSString stringWithCharacters:buffer+i length:1];
+		
+		if([delimiters characterIsMember:buffer[i]]) {
+			capitalizeNext = YES;
+		} else {
+			if(capitalizeNext) {
+				[string appendString:[currentChar uppercaseString]];
+				capitalizeNext = NO;
+			} else {
+				[string appendString:currentChar];
+			}
+		}
+	}
+	
+	free(buffer);
+	return string;
+}
+
+
 -(NSString *)underscore {
 	
 	unichar *buffer = calloc([self length], sizeof(unichar));
@@ -54,7 +83,7 @@
 
 static NSString *baseURLString;
 
-@synthesize theConnection, receivedData, xmlParser, apiKey, fields, rows;
+@synthesize theConnection, receivedData, xmlParser, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows;
 
 -(id)init {	
 	self = [super init];
@@ -66,7 +95,6 @@ static NSString *baseURLString;
 			return nil; 
 		}
 		
-		self.fields = [NSArray arrayWithObject:@"id"];
 		self.rows = [NSMutableArray new];
 	}
 	
@@ -101,8 +129,11 @@ static NSString *baseURLString;
 	self.theConnection = nil;
 	self.receivedData = nil;
 	self.xmlParser = nil;
+	self.currentElementName = nil;
+	self.currentObject = nil;
+	self.currentFieldName = nil;
+	self.currentFieldValue = nil;
 	self.apiKey = nil;
-	self.fields = nil;
 	self.rows = nil;
 	[super dealloc];	
 }
@@ -119,6 +150,12 @@ static NSString *baseURLString;
 +(NSString *)baseURLString {
 	return [[baseURLString retain] autorelease];
 }
+
++(BOOL)willPaginate {
+	return NO;
+}
+
+// ToDo: Implement similar methods as found in Rails willPaginate gem (e.g. totalPages, nextPage, prevPage etc.)
 
 
 #pragma mark API Methods
@@ -213,29 +250,77 @@ static NSString *baseURLString;
 -(BOOL)processData:(NSData *)data {	
 	self.xmlParser = [[NSXMLParser alloc] initWithData:data];
 	[self.xmlParser setDelegate:self];
-    [self.xmlParser setShouldResolveExternalEntities:YES];
 	return [self.xmlParser parse];
 }
 
 #pragma mark NSXMLParser Delegates
 
+
+- (void)parserDidStartDocument:(NSXMLParser *)parser {
+	[self.rows removeAllObjects];
+}
+
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+			
+    if ([elementName isEqualToString:[self resourceName]]) { // Found a relevant object node
+
+		NSLog(@"Found resource node: %@", elementName);
+		
+		self.currentObject = [ActiveResourceObject withWagon:self];
+		
+    } else if (self.currentObject != nil) { // Within a relevant object node
+		
+		NSLog(@"Found nested node within resource: %@", elementName);
+		
+		self.currentElementName = elementName;
+		
+
+		if ([[attributeDict objectForKey:@"nil"] isEqualToString:@"true"]) {
+			NSLog(@"This is an empty node");
+			self.currentElementHasNodeValue = NO;
+		} else {
+			self.currentElementHasNodeValue = YES;
+		}		
+	} else {
+		self.currentObject = nil;
+	}
+}
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if (self.currentObject != nil && self.currentElementName != nil) {
+		
+		if (self.currentFieldName != self.currentElementName) {
+
+			self.currentFieldName = self.currentElementName;
+			if (self.currentElementHasNodeValue) {
+				
+				NSLog(@"Setting content for field: %@\r\n%@", self.currentElementName, string);
+				
+				[self.currentObject setObject:string forKey:[self.currentFieldName camelize]];
+			} else {
+				[self.currentObject setObject:[NSNull null] forKey:[self.currentFieldName camelize]];
+				self.currentFieldName = nil;
+			}
+		} else {			
+			NSLog(@"Row done: %@", self.currentElementName);			
+			self.currentFieldName = nil;
+		}
+	}
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	if ([elementName isEqualToString:[self resourceName]]) {
+		NSLog(@"Adding new object to array");
+		[self.rows addObject:self.currentObject];	
+		self.currentElementName = nil;
+	}
+}
+
+- (void)parserDidEndDocument:(NSXMLParser *)parser {
 	
-    if ([elementName isEqualToString:[self resourceName]]) {
-		ActiveResourceObject *row = [ActiveResourceObject withFieldSet:self.fields wagon:self];
-		
-		// <location rating="2" photo_id="9" user_id="24">/system/photos/9/small/P4210023.jpg?1271874392</location>
-		
-		// ToDo:
-		
-		// 1. Add nodevalue for key "location"
-		// 2. Add attribute values for each attribute
-		// 3. Add those things above only if their keys is included in keys
-		
-		//[row setObject:<#(id)anObject#> forKey:<#(NSString *)aKey#>];
-		
-		[self.rows addObject:row];
-    }
+	if ([delegate respondsToSelector:@selector(didFinishWithResults:)] ) {
+		[delegate didFinishWithResults:[NSArray arrayWithArray:self.rows]];
+	}
 }
 
 

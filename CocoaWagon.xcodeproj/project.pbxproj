@@ -25,7 +25,6 @@
 		A321DAD611B56CD6002B3EA2 /* ActiveResourceObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */; };
 		A321DAEC11B56D29002B3EA2 /* CocoaWagon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC07E0554694100DB518D /* CocoaWagon.a */; };
 		A321DB0A11B56DAA002B3EA2 /* CocoaWagonTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A321DB0911B56DAA002B3EA2 /* CocoaWagonTest.m */; };
-		A3413B2311B7E08400351ED3 /* TestNSString+Inflection.m in Sources */ = {isa = PBXBuildFile; fileRef = A3413B2211B7E08400351ED3 /* TestNSString+Inflection.m */; };
 		A36348D511B52FB600D85EBE /* CocoaWagon.h in Headers */ = {isa = PBXBuildFile; fileRef = A36348D311B52FB600D85EBE /* CocoaWagon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */ = {isa = PBXBuildFile; fileRef = A36348D411B52FB600D85EBE /* CocoaWagon.m */; };
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -288,7 +287,6 @@
 				A321DAD611B56CD6002B3EA2 /* ActiveResourceObjectTest.m in Sources */,
 				A321DB0A11B56DAA002B3EA2 /* CocoaWagonTest.m in Sources */,
 				A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */,
-				A3413B2311B7E08400351ED3 /* TestNSString+Inflection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
