@@ -83,7 +83,7 @@
 
 static NSString *baseURLString;
 
-@synthesize theConnection, receivedData, xmlParser, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows;
+@synthesize theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows;
 
 -(id)init {	
 	self = [super init];
@@ -128,7 +128,6 @@ static NSString *baseURLString;
 	delegate = nil;
 	self.theConnection = nil;
 	self.receivedData = nil;
-	self.xmlParser = nil;
 	self.currentElementName = nil;
 	self.currentObject = nil;
 	self.currentFieldName = nil;
@@ -254,9 +253,9 @@ static NSString *baseURLString;
 #pragma mark XML processing
 
 -(BOOL)processData:(NSData *)data {	
-	self.xmlParser = [[NSXMLParser alloc] initWithData:data];
-	[self.xmlParser setDelegate:self];
-	return [self.xmlParser parse];
+	NSXMLParser *xmlParser = [[[NSXMLParser alloc] initWithData:data] autorelease];
+	[xmlParser setDelegate:self];
+	return [xmlParser parse];
 }
 
 #pragma mark NSXMLParser Delegates

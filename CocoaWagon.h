@@ -27,7 +27,6 @@
 	__weak NSObject <CocoaWagonDelegate> *delegate;	
 	NSURLConnection *theConnection;
 	NSMutableData *receivedData;
-	NSXMLParser *xmlParser;
 	NSString *currentElementName;
 	BOOL currentElementHasNodeValue;
 	ActiveResourceObject *currentObject;
@@ -39,7 +38,6 @@
 
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
-@property(nonatomic, retain) NSXMLParser *xmlParser;
 @property(nonatomic, retain) NSString *currentElementName;
 @property(nonatomic, assign) BOOL currentElementHasNodeValue;
 @property(nonatomic, retain) ActiveResourceObject *currentObject;
