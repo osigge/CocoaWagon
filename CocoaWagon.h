@@ -10,6 +10,7 @@
 #import "ActiveResourceObject.h"
 #import "CocoaWagonDelegate.h"
 #import "ActiveResourceProtocol.h"
+#import "PaginationProtocol.h"
 
 @interface NSString (InflectionSupport)
 
@@ -22,9 +23,10 @@
 @end
 
 
-@interface CocoaWagon : NSObject <ActiveResourceProtocol> {
+@interface CocoaWagon : NSObject <ActiveResourceProtocol, PaginationProtocol> {
 	
 	__weak NSObject <CocoaWagonDelegate> *delegate;	
+	BOOL willPaginate;
 	NSURLConnection *theConnection;
 	NSMutableData *receivedData;
 	NSString *currentElementName;
@@ -34,8 +36,13 @@
 	id currentFieldValue;
 	NSString *apiKey;
 	NSMutableArray *rows;
+	
+	NSInteger currentPage;
+	NSInteger totalPages;
 }
 
+
+@property(nonatomic, assign) BOOL willPaginate;
 @property(nonatomic, retain) NSURLConnection *theConnection;
 @property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, retain) NSString *currentElementName;
@@ -51,21 +58,17 @@
 +(void)setBaseURLString:(NSString *)aBaseURLString;
 +(NSString *)baseURLString;
 
-+(BOOL)willPaginate;
-
-
--(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
-
 /*
- * Use this initializer for public available remote API methods
+ * Pagination expects REST-conform XML and a root node containing corresponding attributes "current_page" and "total_pages" 
  */
-
--(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
+-(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate;
+-(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate;
 
 /*
  * Returns YES if connection could be established. Otherwise NO. See CocoaWagonDelegate for accessing NSError which contains corresponding error messages
  */
 -(BOOL)findAll;
+-(BOOL)findAll:(NSInteger)page;
 
 -(NSURL *)resourcesURL;
 

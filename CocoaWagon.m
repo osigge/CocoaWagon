@@ -83,7 +83,7 @@
 
 static NSString *baseURLString;
 
-@synthesize theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows;
+@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows, totalPages, currentPage;
 
 -(id)init {	
 	self = [super init];
@@ -101,21 +101,22 @@ static NSString *baseURLString;
 	return self;	
 }
 
--(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
+-(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate {
 	
 	self = [self init];
 	
 	if (self != nil) {
 		delegate = theDelegate;
+		self.willPaginate = paginate;
 	}
 	
 	return self;	
 }
 
 
--(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
+-(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate {
 	
-	self = [self initWithDelegate:theDelegate];
+	self = [self initWithDelegate:theDelegate willPaginate:paginate];
 	
 	if (self != nil) {
 		self.apiKey = aKey;
@@ -150,20 +151,25 @@ static NSString *baseURLString;
 	return [[baseURLString retain] autorelease];
 }
 
-+(BOOL)willPaginate {
-	return NO;
-}
 
 // ToDo: Implement similar methods as found in Rails willPaginate gem (e.g. totalPages, nextPage, prevPage etc.)
 
 
 #pragma mark API Methods
 
--(BOOL)findAll {
+-(BOOL)findAll:(NSInteger)page {
 	
 	// ToDo: Send API key if it's present
 	
-	NSURLRequest *theRequest = [NSURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+	NSURL *url;
+	
+	if (page > 0) {
+		url = [self pageURL:page];
+	} else {
+		url = [self resourcesURL];
+	}
+	
+	NSURLRequest *theRequest = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
 	
 	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	
@@ -190,6 +196,10 @@ static NSString *baseURLString;
 	}
 	
 	return YES;
+}
+
+-(BOOL)findAll {
+	return [self findAll:0];
 }
 
 
@@ -232,7 +242,7 @@ static NSString *baseURLString;
 	if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
 		[delegate willProcessData:receivedData];
 	}	
-		
+	
 	if (![self processData:receivedData]) {
 		
 		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
@@ -244,7 +254,7 @@ static NSString *baseURLString;
 			[delegate didFailWithError:error];
 		}	
 	}
-
+	
     [connection release];
     [receivedData release];
 }
@@ -266,9 +276,19 @@ static NSString *baseURLString;
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-			
-    if ([elementName isEqualToString:[self resourceName]]) { // Found a relevant object node
-
+	
+    if ([elementName isEqualToString:[self resourcesName]]) { // Found root node
+		
+		NSLog(@"Found root node: %@", elementName);
+		
+		if (self.willPaginate) {
+			self.totalPages = [[attributeDict objectForKey:@"total_pages"] intValue];
+			self.currentPage = [[attributeDict objectForKey:@"current_page"] intValue];
+			NSLog(@"Resource will paginate. Loaded page %i of %i", self.currentPage, self.totalPages);
+		}
+		
+	} else if ([elementName isEqualToString:[self resourceName]]) { // Found a relevant object node
+		
 		NSLog(@"Found resource node: %@", elementName);
 		
 		self.currentObject = [ActiveResourceObject withWagon:self];
@@ -279,7 +299,7 @@ static NSString *baseURLString;
 		
 		self.currentElementName = elementName;
 		
-
+		
 		if ([[attributeDict objectForKey:@"nil"] isEqualToString:@"true"]) {
 			NSLog(@"This is an empty node");
 			self.currentElementHasNodeValue = NO;
@@ -295,7 +315,7 @@ static NSString *baseURLString;
 	if (self.currentObject != nil && self.currentElementName != nil) {
 		
 		if (self.currentFieldName != self.currentElementName) {
-
+			
 			self.currentFieldName = self.currentElementName;
 			if (self.currentElementHasNodeValue) {
 				
@@ -326,6 +346,8 @@ static NSString *baseURLString;
 	if ([delegate respondsToSelector:@selector(didFinishWithResults:)] ) {
 		[delegate didFinishWithResults:[NSArray arrayWithArray:self.rows]];
 	}
+	
+	[self.rows removeAllObjects];	
 }
 
 
@@ -355,6 +377,37 @@ static NSString *baseURLString;
  */
 -(NSString *)format {
 	return @"xml";
+}
+
+#pragma mark PaginationProtocol
+
+-(NSString *)parameterName {	
+	return @"page";	
+}
+
+-(BOOL)nextPage {
+	if (self.willPaginate && self.currentPage < self.totalPages) {
+		
+		NSInteger page = self.currentPage + 1;
+		
+		return [self findAll:page];
+	} else {
+		return NO;
+	}	
+}
+
+-(BOOL)previousPage {
+	if (self.willPaginate && self.currentPage > 1) {
+		NSInteger page = self.currentPage - 1;
+		
+		return [self findAll:page];
+	} else {
+		return NO;
+	}	
+}
+
+-(NSURL *)pageURL:(NSInteger)page {
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/%i.%@", [self resourceBaseURL], [self resourcesName], self.parameterName, page, [self format]]];
 }
 
 

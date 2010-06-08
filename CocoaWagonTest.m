@@ -22,7 +22,7 @@
 }
 
 -(void)testRemoteConnection {
-	TestObject *testObject = [[[TestObject alloc] initWithDelegate:self] autorelease];
+	TestObject *testObject = [[[TestObject alloc] initWithDelegate:self willPaginate:NO] autorelease];
 	STAssertNotNil(testObject, @"Could not initialize test object");
 	STAssertTrue([testObject findAll], @"Something went wrong with the connection");
 }

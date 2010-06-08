@@ -11,6 +11,8 @@
 
 @protocol CocoaWagonDelegate
 
+@required
+
 -(void)didFinishWithResults:(NSArray *)results;
 
 @optional
