@@ -71,6 +71,8 @@
 +(id)newWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
 +(id)newWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate apiKey:(NSString *)aKey;
 
+-(BOOL)sendRequest:(NSURLRequest *)theRequest;
+
 /*
  * Returns YES if connection could be established. Otherwise NO. See CocoaWagonDelegate for accessing NSError which contains corresponding error messages
  */

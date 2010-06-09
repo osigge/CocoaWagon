@@ -196,31 +196,8 @@ static NSString *baseURLString;
 	
 	NSURLRequest *theRequest = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
 	
-	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	return [self sendRequest:theRequest];
 	
-	if (theConnection) {
-		receivedData = [[NSMutableData data] retain];
-		
-		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-		
-		if ([delegate respondsToSelector:@selector(didSendRequest:)] ) {
-			[delegate didSendRequest:theRequest];
-		}
-		
-	} else {		
-		
-		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
-			
-			NSError *error = [NSError errorWithDomain:@"Could not establish connection." 
-												 code:-1 
-											 userInfo:[NSDictionary dictionaryWithObject:theRequest forKey:@"request"]];			
-			
-			[delegate didFailWithError:error];
-			return NO;
-		}		
-	}
-	
-	return YES;
 }
 
 -(BOOL)findAll {
@@ -268,12 +245,15 @@ static NSString *baseURLString;
 	[theRequest setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
 	[theRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
 	
+	return [self sendRequest:theRequest];
+}
+
+-(BOOL)sendRequest:(NSURLRequest *)theRequest {
 	
+	self.theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	
-	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	
-	if (theConnection) {
-		receivedData = [[NSMutableData data] retain];
+	if (self.theConnection) {
+		self.receivedData = [NSMutableData data];
 		
 		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 		
@@ -307,7 +287,7 @@ static NSString *baseURLString;
 		[delegate didReceiveResponse:response];
 	}
 	
-    [receivedData setLength:0];
+    [self.receivedData setLength:0];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -316,7 +296,7 @@ static NSString *baseURLString;
 		[delegate didReceiveData:data];
 	}
 	
-    [receivedData appendData:data];
+    [self.receivedData appendData:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -324,7 +304,7 @@ static NSString *baseURLString;
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	
     [connection release];
-    [receivedData release];
+    self.receivedData = nil;
 	
 	if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
 		[delegate didFailWithError:error];
@@ -332,27 +312,34 @@ static NSString *baseURLString;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	
+
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-	
-	if ([receivedData length] > 0 && [delegate respondsToSelector:@selector(willProcessData:)] ) {
-		[delegate willProcessData:receivedData];
-	}	
-	
-	if (![self processData:receivedData]) {
 		
-		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
-			
-			NSError *error = [NSError errorWithDomain:@"Could not parse XML data." 
-												 code:-1 
-											 userInfo:[NSDictionary dictionaryWithObject:receivedData forKey:@"data"]];
-			
-			[delegate didFailWithError:error];
+	if ([self.receivedData length] > 1) {
+		if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
+			[delegate willProcessData:self.receivedData];
 		}	
+		
+		if (![self processData:self.receivedData]) {
+			
+			if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
+				
+				NSError *error = [NSError errorWithDomain:@"Could not parse XML data." 
+													 code:-1 
+												 userInfo:[NSDictionary dictionaryWithObject:self.receivedData forKey:@"data"]];
+				
+				[delegate didFailWithError:error];
+			}	
+		}
+		
+	} else {
+		if ([delegate respondsToSelector:@selector(didFinishWithResults:)]) {
+			[delegate didFinishWithResults:nil];
+		}
 	}
-	
+
     [connection release];
-    [receivedData release];
+	self.receivedData = nil;
 }
 
 
