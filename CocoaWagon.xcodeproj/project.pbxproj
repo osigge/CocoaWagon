@@ -29,6 +29,8 @@
 		A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */ = {isa = PBXBuildFile; fileRef = A36348D411B52FB600D85EBE /* CocoaWagon.m */; };
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A363490911B5344000D85EBE /* ActiveResourceObject.m */; };
+		A39C2F2711C010D300F4E9CD /* RequestParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = A39C2F2511C010D300F4E9CD /* RequestParameter.h */; };
+		A39C2F2811C010D300F4E9CD /* RequestParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = A39C2F2611C010D300F4E9CD /* RequestParameter.m */; };
 		A3C87DF211BEAE1C005A3B5A /* PaginationProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C87DF111BEAE1C005A3B5A /* PaginationProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F39E1C11B69B7000EFD2D4 /* TestObject.m */; };
@@ -67,6 +69,8 @@
 		A363490911B5344000D85EBE /* ActiveResourceObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObject.m; sourceTree = "<group>"; };
 		A363497E11B54BF400D85EBE /* ActiveResourceObjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceObjectTest.h; sourceTree = "<group>"; };
 		A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObjectTest.m; sourceTree = "<group>"; };
+		A39C2F2511C010D300F4E9CD /* RequestParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestParameter.h; sourceTree = "<group>"; };
+		A39C2F2611C010D300F4E9CD /* RequestParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestParameter.m; sourceTree = "<group>"; };
 		A3C87DF111BEAE1C005A3B5A /* PaginationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaginationProtocol.h; sourceTree = "<group>"; };
 		A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonDelegate.h; sourceTree = "<group>"; };
 		A3F39E1B11B69B7000EFD2D4 /* TestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestObject.h; sourceTree = "<group>"; };
@@ -110,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				A36349B211B5518300D85EBE /* Protocols */,
-				A363493B11B545B400D85EBE /* Categories */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				A363497D11B54BD800D85EBE /* Tests */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -132,6 +135,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A39C2F2511C010D300F4E9CD /* RequestParameter.h */,
+				A39C2F2611C010D300F4E9CD /* RequestParameter.m */,
 				A36348D311B52FB600D85EBE /* CocoaWagon.h */,
 				A36348D411B52FB600D85EBE /* CocoaWagon.m */,
 				A363490811B5344000D85EBE /* ActiveResourceObject.h */,
@@ -146,13 +151,6 @@
 				AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */,
 			);
 			name = "Other Sources";
-			sourceTree = "<group>";
-		};
-		A363493B11B545B400D85EBE /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Categories;
 			sourceTree = "<group>";
 		};
 		A363497D11B54BD800D85EBE /* Tests */ = {
@@ -193,6 +191,7 @@
 				A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */,
 				A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */,
 				A3C87DF211BEAE1C005A3B5A /* PaginationProtocol.h in Headers */,
+				A39C2F2711C010D300F4E9CD /* RequestParameter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +299,7 @@
 			files = (
 				A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */,
 				A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */,
+				A39C2F2811C010D300F4E9CD /* RequestParameter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

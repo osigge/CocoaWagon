@@ -61,7 +61,7 @@
 	NSEnumerator *objectEnumerator = [rows objectEnumerator];
 	id rowObject;
 	
-	NSMutableArray *objects = [NSMutableArray new];
+	NSMutableArray *objects = [[NSMutableArray new] autorelease];
 	ActiveResourceObject *object;
 	
 	while (rowObject = [objectEnumerator nextObject]) {

@@ -7,6 +7,7 @@
 //
 
 #import "ActiveResourceObject.h"
+#import "CocoaWagon.h"
 
 @implementation ActiveResourceObject
 
@@ -79,9 +80,32 @@
 	return [dictionary objectForKey:aKey];
 }
 
-
 -(NSArray *)fields {
 	return [dictionary allKeys];
+}
+
+-(NSArray *)values {
+	return [dictionary allValues];
+}
+
+-(NSDictionary *)dictionary {
+	// Consider returning a copy of it - at the first thought returning a retained object makes sense to keep the connection to the object when modifying
+	return [[dictionary retain] autorelease];
+}
+
+
+-(BOOL)save {
+	if ([self newRecord]) {
+		return [wagon create:self];
+	} else {
+		// ToDo: Implement update incl. dirty object tracking		
+	}
+
+	return NO;
+}
+
+-(BOOL)newRecord {
+	return self.primaryKey == 0;
 }
 
 

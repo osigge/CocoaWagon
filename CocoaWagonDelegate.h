@@ -25,6 +25,7 @@
 -(void)didSendRequest:(NSURLRequest *)request;
 -(void)didReceiveData:(NSData *)data;
 -(void)willProcessData:(NSData *)data;
+-(void)didFinishWithErrors:(NSArray *)errors;
 
 
 @end

@@ -10,7 +10,6 @@
 
 @class CocoaWagon;
 
-
 @interface ActiveResourceObject : NSObject {	
 	CocoaWagon *wagon;
 	NSInteger primaryKey;
@@ -47,5 +46,11 @@
 -(void)addEntriesFromDictionary:(NSDictionary *)aDictionary;
 
 -(NSArray *)fields;
+-(NSArray *)values;
+-(NSDictionary *)dictionary;
+
+-(BOOL)save;
+
+-(BOOL)newRecord;
 
 @end

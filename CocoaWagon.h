@@ -36,6 +36,8 @@
 	id currentFieldValue;
 	NSString *apiKey;
 	NSMutableArray *rows;
+	BOOL containsErrorMessages;
+	NSMutableArray *newObjects;
 	
 	NSInteger currentPage;
 	NSInteger totalPages;
@@ -52,6 +54,8 @@
 @property(nonatomic, retain) id currentFieldValue;
 @property(nonatomic, retain) NSString *apiKey;
 @property(nonatomic, retain) NSMutableArray *rows;
+@property(nonatomic, assign) BOOL containsErrorMessages;
+@property(nonatomic, retain) NSMutableArray *newObjects;
 
 
 
@@ -62,13 +66,19 @@
  * Pagination expects REST-conform XML and a root node containing corresponding attributes "current_page" and "total_pages" 
  */
 -(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate;
--(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate;
+-(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate apiKey:(NSString *)aKey;
+
++(id)newWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate;
++(id)newWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate apiKey:(NSString *)aKey;
 
 /*
  * Returns YES if connection could be established. Otherwise NO. See CocoaWagonDelegate for accessing NSError which contains corresponding error messages
  */
 -(BOOL)findAll;
 -(BOOL)findAll:(NSInteger)page;
+
+-(ActiveResourceObject *)new;
+-(BOOL)create:(ActiveResourceObject *)object;
 
 -(NSURL *)resourcesURL;
 

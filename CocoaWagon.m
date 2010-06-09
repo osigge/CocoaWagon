@@ -7,7 +7,7 @@
 //
 
 #import "CocoaWagon.h"
-
+#import "RequestParameter.h"
 
 @implementation NSString (InflectionSupport)
 
@@ -83,7 +83,7 @@
 
 static NSString *baseURLString;
 
-@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows, totalPages, currentPage;
+@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows, containsErrorMessages, newObjects, totalPages, currentPage;
 
 -(id)init {	
 	self = [super init];
@@ -95,7 +95,7 @@ static NSString *baseURLString;
 			return nil; 
 		}
 		
-		self.rows = [NSMutableArray new];
+		self.rows = [[NSMutableArray new] autorelease];
 	}
 	
 	return self;	
@@ -113,8 +113,7 @@ static NSString *baseURLString;
 	return self;	
 }
 
-
--(id)initWithApiKey:(NSString *)aKey delegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate {
+-(id)initWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate willPaginate:(BOOL)paginate apiKey:(NSString *)aKey {
 	
 	self = [self initWithDelegate:theDelegate willPaginate:paginate];
 	
@@ -124,6 +123,31 @@ static NSString *baseURLString;
 	
 	return self;
 }
+
++(id)newWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate {
+	
+	id instance = [[[[self class] alloc] initWithDelegate:theDelegate willPaginate:NO] autorelease];
+	
+	if (instance != nil) {
+		
+	}
+	
+	return instance;
+	
+}
+
++(id)newWithDelegate:(NSObject <CocoaWagonDelegate> *)theDelegate apiKey:(NSString *)aKey {
+	
+	id instance = [[[[self class] alloc] initWithDelegate:theDelegate willPaginate:NO apiKey:aKey] autorelease];
+	
+	if (instance != nil) {
+		
+	}
+	
+	return instance;
+	
+}
+
 
 -(void)dealloc {	
 	delegate = nil;
@@ -135,6 +159,7 @@ static NSString *baseURLString;
 	self.currentFieldValue = nil;
 	self.apiKey = nil;
 	self.rows = nil;
+	self.newObjects = nil;
 	[super dealloc];	
 }
 
@@ -152,10 +177,10 @@ static NSString *baseURLString;
 }
 
 
-// ToDo: Implement similar methods as found in Rails willPaginate gem (e.g. totalPages, nextPage, prevPage etc.)
-
 
 #pragma mark API Methods
+
+// ToDo: Consider moving methods like findAll to an ClassMethod to maintain classic ORM pattern
 
 -(BOOL)findAll:(NSInteger)page {
 	
@@ -203,7 +228,78 @@ static NSString *baseURLString;
 }
 
 
+-(ActiveResourceObject *)new {
+	
+	ActiveResourceObject *newObject = [ActiveResourceObject withWagon:self];
+	
+	if (self.newObjects) {
+		[self.newObjects addObject:newObject];
+	} else {
+		[self.newObjects arrayByAddingObject:newObject];
+	}
+	
+	return newObject;
+	
+}
+
+-(BOOL)create:(ActiveResourceObject *)object {
+	// ToDo: Send API key if it's present
+	
+	
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+	[theRequest setHTTPMethod:@"POST"];
+	
+	NSMutableArray *encodedParameters = [NSMutableArray new];
+	RequestParameter *parameter;
+	
+	NSEnumerator *enumerator = [[object dictionary] keyEnumerator];
+	NSString *key;
+	
+	while ((key = [enumerator nextObject])) {
+		parameter = [[RequestParameter alloc] initWithName:key value:[object objectForKey:key] scope:[self resourceName]];
+		NSString *encodedParameterPair = [parameter scopedURLEncodedNameValuePair];
+		[encodedParameters addObject:encodedParameterPair];
+		[parameter release];
+	}
+	
+	NSData *postData = [[encodedParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+	[encodedParameters release];
+	[theRequest setHTTPBody:postData];
+	[theRequest setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+	[theRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+	
+	
+	
+	theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	
+	if (theConnection) {
+		receivedData = [[NSMutableData data] retain];
+		
+		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+		
+		if ([delegate respondsToSelector:@selector(didSendRequest:)] ) {
+			[delegate didSendRequest:theRequest];
+		}
+		
+	} else {		
+		
+		if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
+			
+			NSError *error = [NSError errorWithDomain:@"Could not establish connection." 
+												 code:-1 
+											 userInfo:[NSDictionary dictionaryWithObject:theRequest forKey:@"request"]];			
+			
+			[delegate didFailWithError:error];
+			return NO;
+		}		
+	}
+	
+	return YES;
+}
+
+
 #pragma mark NSURLConnection Delegates
+
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response {
 	
@@ -239,7 +335,7 @@ static NSString *baseURLString;
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	
-	if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
+	if ([receivedData length] > 0 && [delegate respondsToSelector:@selector(willProcessData:)] ) {
 		[delegate willProcessData:receivedData];
 	}	
 	
@@ -265,11 +361,11 @@ static NSString *baseURLString;
 -(BOOL)processData:(NSData *)data {	
 	NSXMLParser *xmlParser = [[[NSXMLParser alloc] initWithData:data] autorelease];
 	[xmlParser setDelegate:self];
+	NSLog(@"\r\n\r\n%@\r\n", [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease]);
 	return [xmlParser parse];
 }
 
 #pragma mark NSXMLParser Delegates
-
 
 - (void)parserDidStartDocument:(NSXMLParser *)parser {
 	[self.rows removeAllObjects];
@@ -287,18 +383,29 @@ static NSString *baseURLString;
 			NSLog(@"Resource will paginate. Loaded page %i of %i", self.currentPage, self.totalPages);
 		}
 		
-	} else if ([elementName isEqualToString:[self resourceName]]) { // Found a relevant object node
+		self.containsErrorMessages = NO;
+		
+	} else if ([elementName isEqualToString:@"errors"]) { // Found errors node at root level
+		
+		NSLog(@"Found errors node at root level");
+		self.containsErrorMessages = YES;		
+		
+	} else if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) { // Found a relevant object node
 		
 		NSLog(@"Found resource node: %@", elementName);
 		
-		self.currentObject = [ActiveResourceObject withWagon:self];
+		if (self.containsErrorMessages) {
+			self.currentObject = [[[ActiveResourceObject alloc] init] autorelease];
+			self.currentElementName = elementName;
+			self.currentElementHasNodeValue = YES;
+		} else {
+			self.currentObject = [ActiveResourceObject withWagon:self];
+		}
 		
     } else if (self.currentObject != nil) { // Within a relevant object node
 		
-		NSLog(@"Found nested node within resource: %@", elementName);
-		
+		NSLog(@"Found nested node within resource: %@", elementName);		
 		self.currentElementName = elementName;
-		
 		
 		if ([[attributeDict objectForKey:@"nil"] isEqualToString:@"true"]) {
 			NSLog(@"This is an empty node");
@@ -306,6 +413,7 @@ static NSString *baseURLString;
 		} else {
 			self.currentElementHasNodeValue = YES;
 		}		
+		
 	} else {
 		self.currentObject = nil;
 	}
@@ -334,17 +442,38 @@ static NSString *baseURLString;
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	if ([elementName isEqualToString:[self resourceName]]) {
+	if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) {
 		NSLog(@"Adding new object to array");
 		[self.rows addObject:self.currentObject];	
 		self.currentElementName = nil;
 	}
 }
 
+/*
+ * See RFC 2616 10 Status Code Definitions for details
+ * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+ */
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
 	
-	if ([delegate respondsToSelector:@selector(didFinishWithResults:)] ) {
-		[delegate didFinishWithResults:[NSArray arrayWithArray:self.rows]];
+	if (self.containsErrorMessages) {
+				
+		if ([delegate respondsToSelector:@selector(didFinishWithErrors:)]) {		
+			
+			NSMutableArray *errors = [NSMutableArray new];
+			NSEnumerator *enumerator = [self.rows objectEnumerator];
+			ActiveResourceObject *anObject;
+						
+			while (anObject = [enumerator nextObject]) {
+				[errors addObject:[anObject objectForKey:@"error"]];
+			}			
+
+			[delegate didFinishWithErrors:[NSArray arrayWithArray:errors]];		
+			[errors release];
+		}		
+	} else {		
+		if ([delegate respondsToSelector:@selector(didFinishWithResults:)]) {
+			[delegate didFinishWithResults:[NSArray arrayWithArray:self.rows]];
+		}
 	}
 	
 	[self.rows removeAllObjects];	
