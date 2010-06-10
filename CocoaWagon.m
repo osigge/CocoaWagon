@@ -83,7 +83,7 @@
 
 static NSString *baseURLString;
 
-@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentObject, currentFieldName, currentFieldValue, apiKey, rows, containsErrorMessages, newObjects, totalPages, currentPage;
+@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentNodeValueCharacters, currentObject, apiKey, rows, containsErrorMessages, newObjects, totalPages, currentPage;
 
 -(id)init {	
 	self = [super init];
@@ -154,9 +154,8 @@ static NSString *baseURLString;
 	self.theConnection = nil;
 	self.receivedData = nil;
 	self.currentElementName = nil;
+	self.currentNodeValueCharacters = nil;
 	self.currentObject = nil;
-	self.currentFieldName = nil;
-	self.currentFieldValue = nil;
 	self.apiKey = nil;
 	self.rows = nil;
 	self.newObjects = nil;
@@ -407,29 +406,29 @@ static NSString *baseURLString;
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-	if (self.currentObject != nil && self.currentElementName != nil) {
+	
+	if (self.currentObject != nil && self.currentElementName != nil) { // We've an open, named and relevant node with a value
 		
-		if (self.currentFieldName != self.currentElementName) {
+		if (self.currentElementHasNodeValue) { // It's some characters
 			
-			self.currentFieldName = self.currentElementName;
-			if (self.currentElementHasNodeValue) {
-				
-				NSLog(@"Setting content for field: %@\r\n%@", self.currentElementName, string);
-				
-				[self.currentObject setObject:string forKey:[self.currentFieldName camelize]];
-			} else {
-				[self.currentObject setObject:[NSNull null] forKey:[self.currentFieldName camelize]];
-				self.currentFieldName = nil;
+			if (self.currentNodeValueCharacters == nil) { // Prepare container for collecting them
+				self.currentNodeValueCharacters = [NSMutableString stringWithCapacity:[string length]];
 			}
-		} else {			
-			NSLog(@"Row done: %@", self.currentElementName);			
-			self.currentFieldName = nil;
+			
+			NSLog(@"Collecting characters for field: %@\r\n%@", self.currentElementName, string);			
+			[self.currentNodeValueCharacters appendString:string];
 		}
+		
 	}
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) {
+		
+		NSLog(@"Node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
+		[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
+		self.currentNodeValueCharacters = nil;
+		
 		NSLog(@"Adding new object to array");
 		[self.rows addObject:self.currentObject];	
 		self.currentElementName = nil;

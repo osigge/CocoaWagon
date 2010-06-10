@@ -31,9 +31,8 @@
 	NSMutableData *receivedData;
 	NSString *currentElementName;
 	BOOL currentElementHasNodeValue;
+	NSMutableString *currentNodeValueCharacters;
 	ActiveResourceObject *currentObject;
-	NSString *currentFieldName;
-	id currentFieldValue;
 	NSString *apiKey;
 	NSMutableArray *rows;
 	BOOL containsErrorMessages;
@@ -49,9 +48,8 @@
 @property(nonatomic, retain) NSMutableData *receivedData;
 @property(nonatomic, retain) NSString *currentElementName;
 @property(nonatomic, assign) BOOL currentElementHasNodeValue;
+@property(nonatomic, retain) NSMutableString *currentNodeValueCharacters;
 @property(nonatomic, retain) ActiveResourceObject *currentObject;
-@property(nonatomic, retain) NSString *currentFieldName;
-@property(nonatomic, retain) id currentFieldValue;
 @property(nonatomic, retain) NSString *apiKey;
 @property(nonatomic, retain) NSMutableArray *rows;
 @property(nonatomic, assign) BOOL containsErrorMessages;
