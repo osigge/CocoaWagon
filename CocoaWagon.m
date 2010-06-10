@@ -252,7 +252,7 @@ static NSString *baseURLString;
 	
 	NSArray *availableCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:baseURLString]];
     NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:availableCookies];
-
+	
     [theRequest setAllHTTPHeaderFields:headers];
 	
 	NSLog(@"HTTP Request Header: \r\n%@", [theRequest allHTTPHeaderFields]);
@@ -302,7 +302,7 @@ static NSString *baseURLString;
 		NSLog(@"Storing %d cookies", all.count);
 		[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookies:all forURL:[NSURL URLWithString:baseURLString] mainDocumentURL:nil];
 	}
-
+	
     [self.receivedData setLength:0];
 }
 
@@ -328,9 +328,9 @@ static NSString *baseURLString;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-
+	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-		
+	
 	if ([self.receivedData length] > 1) {
 		if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
 			[delegate willProcessData:self.receivedData];
@@ -353,7 +353,7 @@ static NSString *baseURLString;
 			[delegate didFinishWithResults:nil];
 		}
 	}
-
+	
     [connection release];
 	self.receivedData = nil;
 }
@@ -407,7 +407,7 @@ static NSString *baseURLString;
 		
     } else if (self.currentObject != nil) { // Within a relevant object node
 		
-		NSLog(@"Found nested node within resource: %@", elementName);		
+		NSLog(@"Found nested content node within resource: %@", elementName);		
 		self.currentElementName = elementName;
 		
 		if ([[attributeDict objectForKey:@"nil"] isEqualToString:@"true"]) {
@@ -435,19 +435,33 @@ static NSString *baseURLString;
 			NSLog(@"Collecting characters for field: %@\r\n%@", self.currentElementName, string);			
 			[self.currentNodeValueCharacters appendString:string];
 		}
-		
 	}
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	
 	if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) {
+
+		if ((self.containsErrorMessages && [elementName isEqualToString:@"error"])) {			
+			NSLog(@"Content node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
+			[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
+			self.currentNodeValueCharacters = nil;
+		}
 		
-		NSLog(@"Node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
-		[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
-		self.currentNodeValueCharacters = nil;
-		
-		NSLog(@"Adding new object to array");
+		NSLog(@"Resource node done. Adding new object to array");
 		[self.rows addObject:self.currentObject];	
+		self.currentElementName = nil;
+		
+	} else if (self.currentElementName != nil) {
+
+		if (self.currentNodeValueCharacters != nil) {		
+			NSLog(@"Content node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
+			[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
+			self.currentNodeValueCharacters = nil;
+		} else {
+			NSLog(@"Content node done. There weren't any characters found for: %@", self.currentElementName);	
+			[self.currentObject setObject:[NSNull null] forKey:[self.currentElementName camelize]];
+		}
 		self.currentElementName = nil;
 	}
 }
@@ -459,17 +473,17 @@ static NSString *baseURLString;
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
 	
 	if (self.containsErrorMessages) {
-				
+		
 		if ([delegate respondsToSelector:@selector(didFinishWithErrors:)]) {		
 			
 			NSMutableArray *errors = [NSMutableArray new];
 			NSEnumerator *enumerator = [self.rows objectEnumerator];
 			ActiveResourceObject *anObject;
-						
+			
 			while (anObject = [enumerator nextObject]) {
 				[errors addObject:[anObject objectForKey:@"error"]];
 			}			
-
+			
 			[delegate didFinishWithErrors:[NSArray arrayWithArray:errors]];		
 			[errors release];
 		}		
