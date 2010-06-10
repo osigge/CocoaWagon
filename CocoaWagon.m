@@ -193,7 +193,7 @@ static NSString *baseURLString;
 		url = [self resourcesURL];
 	}
 	
-	NSURLRequest *theRequest = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
 	
 	return [self sendRequest:theRequest];
 	
@@ -247,7 +247,15 @@ static NSString *baseURLString;
 	return [self sendRequest:theRequest];
 }
 
--(BOOL)sendRequest:(NSURLRequest *)theRequest {
+-(BOOL)sendRequest:(NSMutableURLRequest *)theRequest {
+	
+	
+	NSArray *availableCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:baseURLString]];
+    NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:availableCookies];
+
+    [theRequest setAllHTTPHeaderFields:headers];
+	
+	NSLog(@"HTTP Request Header: \r\n%@", [theRequest allHTTPHeaderFields]);
 	
 	self.theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	
@@ -286,6 +294,15 @@ static NSString *baseURLString;
 		[delegate didReceiveResponse:response];
 	}
 	
+	NSLog(@"Got HTTP Response Headers: \r\n%@", [response allHeaderFields]);
+	
+    NSArray *all = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:[NSURL URLWithString:baseURLString]];
+	
+	if (all.count > 0) {
+		NSLog(@"Storing %d cookies", all.count);
+		[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookies:all forURL:[NSURL URLWithString:baseURLString] mainDocumentURL:nil];
+	}
+
     [self.receivedData setLength:0];
 }
 
