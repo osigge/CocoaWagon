@@ -78,7 +78,7 @@
 	for (index = 0; index < [objects count]; index++) {			
 		
 		activeResourceObject = [objects objectAtIndex:index];		
-		STAssertEquals(activeResourceObject.primaryKey, [[activeResourceObject objectForKey:@"id"] intValue], @"Primary key doesn't match row value");
+		STAssertEquals(activeResourceObject.primaryKey, (NSUInteger)[[activeResourceObject objectForKey:@"id"] intValue], @"Primary key doesn't match row value");
 
 		objectValue = [activeResourceObject objectForKey:@"foo"];
 		assignedValue = [NSString stringWithFormat:@"row %i foo", index + 1];		
