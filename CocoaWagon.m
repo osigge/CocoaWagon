@@ -7,8 +7,6 @@
 //
 
 #import "CocoaWagon.h"
-#import "RequestParameter.h"
-
 @implementation NSString (InflectionSupport)
 
 - (NSCharacterSet *)capitals {
@@ -77,7 +75,6 @@
 }
 
 @end
-
 
 @implementation CocoaWagon
 
@@ -176,14 +173,11 @@ static NSString *baseURLString;
 }
 
 
-
 #pragma mark API Methods
 
 // ToDo: Consider moving methods like findAll to an ClassMethod to maintain classic ORM pattern
 
 -(BOOL)findAll:(NSInteger)page {
-	
-	// ToDo: Send API key if it's present
 	
 	NSURL *url;
 	
@@ -218,44 +212,63 @@ static NSString *baseURLString;
 	
 }
 
--(BOOL)create:(ActiveResourceObject *)object {
-	// ToDo: Send API key if it's present
-	
+-(BOOL)create:(ActiveResourceObject *)anObject {
 	
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
 	[theRequest setHTTPMethod:@"POST"];
+	[theRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", MULTIPART_FORM_DATA_BOUNDARY] forHTTPHeaderField:@"Content-Type"];		
 	
-	NSMutableArray *encodedParameters = [NSMutableArray new];
-	RequestParameter *parameter;
+	NSMutableData *postData = [NSMutableData new];
 	
-	NSEnumerator *enumerator = [[object dictionary] keyEnumerator];
+	NSEnumerator *enumerator = [[anObject dictionary] keyEnumerator];
 	NSString *key;
+	id object;
 	
 	while ((key = [enumerator nextObject])) {
-		parameter = [[RequestParameter alloc] initWithName:key value:[object objectForKey:key] scope:[self resourceName]];
-		NSString *encodedParameterPair = [parameter scopedURLEncodedNameValuePair];
-		[encodedParameters addObject:encodedParameterPair];
-		[parameter release];
+		
+		object = [anObject objectForKey:key];
+		
+		[postData appendData:[[NSString stringWithFormat:@"--%@\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];
+		
+		NSString *scope = [NSString stringWithFormat:@"%@[%@]", [self resourceName], key];
+		
+		if ([object isKindOfClass:[CWFile class]]) {
+			CWFile *payload = object;
+			[postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", scope, payload.filename, payload.filetype] dataUsingEncoding:NSASCIIStringEncoding]];
+			[postData appendData:payload.filedata];								
+		} else {						
+			NSString *payload = object;			
+			[postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", scope] dataUsingEncoding:NSASCIIStringEncoding]];			
+			[postData appendData:[payload dataUsingEncoding:NSASCIIStringEncoding]];			
+		}
+		
+		[postData appendData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
+		
 	}
 	
-	NSData *postData = [[encodedParameters componentsJoinedByString:@"&"] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-	[encodedParameters release];
-	[theRequest setHTTPBody:postData];
+	[postData appendData:[[NSString stringWithFormat:@"--%@--\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];		
 	[theRequest setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
-	[theRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+	[theRequest setHTTPBody:postData];
+	[postData release];
 	
 	return [self sendRequest:theRequest];
 }
 
 -(BOOL)sendRequest:(NSMutableURLRequest *)theRequest {
 	
+	// ToDo: Send API key if it's present
 	
 	NSArray *availableCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:baseURLString]];
     NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:availableCookies];
 	
     [theRequest setAllHTTPHeaderFields:headers];
+	[theRequest setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];  
 	
 	NSLog(@"HTTP Request Header: \r\n%@", [theRequest allHTTPHeaderFields]);
+	
+	if ([theRequest HTTPBody] != nil) {
+		NSLog(@"HTTP Request Body: \r\n%@", [[[NSString alloc] initWithData:[theRequest HTTPBody] encoding:NSASCIIStringEncoding] autorelease]);
+	}
 	
 	self.theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	
@@ -313,6 +326,12 @@ static NSString *baseURLString;
 	}
 	
     [self.receivedData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+	if ([delegate respondsToSelector:@selector(didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:)] ) {
+		[delegate didSendBodyData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+	}	
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -441,7 +460,7 @@ static NSString *baseURLString;
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	
 	if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) {
-
+		
 		if ((self.containsErrorMessages && [elementName isEqualToString:@"error"])) {			
 			NSLog(@"Content node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
 			[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
@@ -453,7 +472,7 @@ static NSString *baseURLString;
 		self.currentElementName = nil;
 		
 	} else if (self.currentElementName != nil) {
-
+		
 		if (self.currentNodeValueCharacters != nil) {		
 			NSLog(@"Content node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
 			[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
@@ -502,6 +521,7 @@ static NSString *baseURLString;
 -(NSURL *)resourcesURL {
 	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@", [self resourceBaseURL], [self resourcesName], [self format]]];
 }
+
 
 -(NSString *)resourceBaseURL {
 	return [CocoaWagon baseURLString];
@@ -552,7 +572,7 @@ static NSString *baseURLString;
 	}	
 }
 
--(NSURL *)pageURL:(NSInteger)page {
+-(NSURL *)pageURL:(NSUInteger)page {
 	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@/%i.%@", [self resourceBaseURL], [self resourcesName], self.parameterName, page, [self format]]];
 }
 
