@@ -4,12 +4,15 @@
 
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
+
+	#import "Constants.h"
+
+	// Removes NSLog on release builds
+	#ifndef __OPTIMIZE__
+		#define NSLog(...) NSLog(__VA_ARGS__)
+	#else
+		#define NSLog(...) {}
+	#endif
 #endif
 
 
-// Remove NSLog on release builds
-#ifndef __OPTIMIZE__
-	#define NSLog(...) NSLog(__VA_ARGS__)
-#else
-	#define NSLog(...) {}
-#endif
