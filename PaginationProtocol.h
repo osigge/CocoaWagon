@@ -11,12 +11,12 @@
 
 @protocol PaginationProtocol
 
-@property(nonatomic, assign) NSInteger currentPage;
-@property(nonatomic, assign) NSInteger totalPages;
+@property(nonatomic, assign) NSUInteger currentPage;
+@property(nonatomic, assign) NSUInteger totalPages;
 
 -(NSString *)parameterName;
 -(BOOL)nextPage;
 -(BOOL)previousPage;
--(NSURL *)pageURL:(NSInteger)page;
+-(NSURL *)pageURL:(NSUInteger)page;
 
 @end
