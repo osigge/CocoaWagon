@@ -12,11 +12,11 @@
 
 @interface ActiveResourceObject : NSObject {	
 	CocoaWagon *wagon;
-	NSInteger primaryKey;
+	NSUInteger primaryKey;
 	NSMutableDictionary *dictionary;	
 }
 
-@property(nonatomic, assign) NSInteger primaryKey;
+@property(nonatomic, assign) NSUInteger primaryKey;
 
 -(id)initWithWagon:(CocoaWagon *)aWagon;
 
@@ -28,7 +28,7 @@
 /*
  * Use this initializer to map a row to a new instance.
  */
-+(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow wagon:(CocoaWagon *)aWagon;
++(id)withPrimaryKey:(NSUInteger)aKey row:(NSDictionary *)aRow wagon:(CocoaWagon *)aWagon;
 
 /*
  * Sets a row value

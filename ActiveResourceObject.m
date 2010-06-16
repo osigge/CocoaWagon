@@ -56,7 +56,7 @@
 	return object;
 }
 
-+(id)withPrimaryKey:(NSInteger)aKey row:(NSDictionary *)aRow wagon:(CocoaWagon *)aWagon {
++(id)withPrimaryKey:(NSUInteger)aKey row:(NSDictionary *)aRow wagon:(CocoaWagon *)aWagon {
 	
 	ActiveResourceObject *object = [ActiveResourceObject withWagon:aWagon];
 			
