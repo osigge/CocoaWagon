@@ -29,9 +29,11 @@
 		A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */ = {isa = PBXBuildFile; fileRef = A36348D411B52FB600D85EBE /* CocoaWagon.m */; };
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A363490911B5344000D85EBE /* ActiveResourceObject.m */; };
-		A39C2F2711C010D300F4E9CD /* RequestParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = A39C2F2511C010D300F4E9CD /* RequestParameter.h */; };
-		A39C2F2811C010D300F4E9CD /* RequestParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = A39C2F2611C010D300F4E9CD /* RequestParameter.m */; };
 		A3C87DF211BEAE1C005A3B5A /* PaginationProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C87DF111BEAE1C005A3B5A /* PaginationProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A3C91FBC11C7EC4700DE60D8 /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C91FBA11C7EC4700DE60D8 /* Constants.h */; };
+		A3C91FBD11C7EC4700DE60D8 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C91FBB11C7EC4700DE60D8 /* Constants.m */; };
+		A3C9224A11C9085200DE60D8 /* CWFile.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C9224811C9085200DE60D8 /* CWFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A3C9224B11C9085200DE60D8 /* CWFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9224911C9085200DE60D8 /* CWFile.m */; };
 		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3F39E1D11B69B7000EFD2D4 /* TestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F39E1C11B69B7000EFD2D4 /* TestObject.m */; };
 		A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E8711B6A47D00EFD2D4 /* ActiveResourceProtocol.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -69,9 +71,11 @@
 		A363490911B5344000D85EBE /* ActiveResourceObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObject.m; sourceTree = "<group>"; };
 		A363497E11B54BF400D85EBE /* ActiveResourceObjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceObjectTest.h; sourceTree = "<group>"; };
 		A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObjectTest.m; sourceTree = "<group>"; };
-		A39C2F2511C010D300F4E9CD /* RequestParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestParameter.h; sourceTree = "<group>"; };
-		A39C2F2611C010D300F4E9CD /* RequestParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestParameter.m; sourceTree = "<group>"; };
 		A3C87DF111BEAE1C005A3B5A /* PaginationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaginationProtocol.h; sourceTree = "<group>"; };
+		A3C91FBA11C7EC4700DE60D8 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		A3C91FBB11C7EC4700DE60D8 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		A3C9224811C9085200DE60D8 /* CWFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFile.h; sourceTree = "<group>"; };
+		A3C9224911C9085200DE60D8 /* CWFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWFile.m; sourceTree = "<group>"; };
 		A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonDelegate.h; sourceTree = "<group>"; };
 		A3F39E1B11B69B7000EFD2D4 /* TestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestObject.h; sourceTree = "<group>"; };
 		A3F39E1C11B69B7000EFD2D4 /* TestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestObject.m; sourceTree = "<group>"; };
@@ -135,12 +139,12 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				A39C2F2511C010D300F4E9CD /* RequestParameter.h */,
-				A39C2F2611C010D300F4E9CD /* RequestParameter.m */,
 				A36348D311B52FB600D85EBE /* CocoaWagon.h */,
 				A36348D411B52FB600D85EBE /* CocoaWagon.m */,
 				A363490811B5344000D85EBE /* ActiveResourceObject.h */,
 				A363490911B5344000D85EBE /* ActiveResourceObject.m */,
+				A3C9224811C9085200DE60D8 /* CWFile.h */,
+				A3C9224911C9085200DE60D8 /* CWFile.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -149,6 +153,8 @@
 			isa = PBXGroup;
 			children = (
 				AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */,
+				A3C91FBA11C7EC4700DE60D8 /* Constants.h */,
+				A3C91FBB11C7EC4700DE60D8 /* Constants.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -191,7 +197,8 @@
 				A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */,
 				A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */,
 				A3C87DF211BEAE1C005A3B5A /* PaginationProtocol.h in Headers */,
-				A39C2F2711C010D300F4E9CD /* RequestParameter.h in Headers */,
+				A3C91FBC11C7EC4700DE60D8 /* Constants.h in Headers */,
+				A3C9224A11C9085200DE60D8 /* CWFile.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,7 +306,8 @@
 			files = (
 				A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */,
 				A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */,
-				A39C2F2811C010D300F4E9CD /* RequestParameter.m in Sources */,
+				A3C91FBD11C7EC4700DE60D8 /* Constants.m in Sources */,
+				A3C9224B11C9085200DE60D8 /* CWFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
