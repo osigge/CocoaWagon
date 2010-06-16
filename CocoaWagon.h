@@ -11,6 +11,7 @@
 #import "CocoaWagonDelegate.h"
 #import "ActiveResourceProtocol.h"
 #import "PaginationProtocol.h"
+#import "CWFile.h"
 
 @interface NSString (InflectionSupport)
 
@@ -21,7 +22,6 @@
 -(NSString *)pluralize;
 
 @end
-
 
 @interface CocoaWagon : NSObject <ActiveResourceProtocol, PaginationProtocol> {
 	
@@ -38,8 +38,8 @@
 	BOOL containsErrorMessages;
 	NSMutableArray *newObjects;
 	
-	NSInteger currentPage;
-	NSInteger totalPages;
+	NSUInteger currentPage;
+	NSUInteger totalPages;
 }
 
 
@@ -78,7 +78,7 @@
 -(BOOL)findAll:(NSInteger)page;
 
 -(ActiveResourceObject *)new;
--(BOOL)create:(ActiveResourceObject *)object;
+-(BOOL)create:(ActiveResourceObject *)anObject;
 
 -(NSURL *)resourcesURL;
 
