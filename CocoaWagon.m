@@ -338,7 +338,7 @@ static NSString *baseURLString;
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	
-    [connection release];
+    self.theConnection = nil;
     self.receivedData = nil;
 	
 	if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
@@ -373,7 +373,7 @@ static NSString *baseURLString;
 		}
 	}
 	
-    [connection release];
+    self.theConnection = nil;
 	self.receivedData = nil;
 }
 
