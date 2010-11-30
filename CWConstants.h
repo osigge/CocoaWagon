@@ -11,6 +11,11 @@
 
 extern NSString * const MULTIPART_FORM_DATA_BOUNDARY;
 
-@interface Constants : NSObject {}
+extern NSInteger const CWCreate;
+extern NSInteger const CWRead;
+extern NSInteger const CWUpdate;
+extern NSInteger const CWDelete;
+
+@interface CWConstants : NSObject {}
 
 @end

@@ -13,7 +13,7 @@
 
 @required
 
--(void)didFinishWithResults:(NSArray *)results;
+-(void)didFinishWithResults:(NSArray *)results fromClass:(NSObject *)class action:(NSInteger)action;
 
 @optional
 

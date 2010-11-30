@@ -12,6 +12,7 @@
 #import "ActiveResourceProtocol.h"
 #import "PaginationProtocol.h"
 #import "CWFile.h"
+#import "CWConstants.h"
 
 @interface NSString (InflectionSupport)
 
@@ -23,7 +24,7 @@
 
 @end
 
-@interface CocoaWagon : NSObject <ActiveResourceProtocol, PaginationProtocol> {
+@interface CocoaWagon : NSObject <ActiveResourceProtocol, PaginationProtocol, NSXMLParserDelegate> {
 	
 	__weak NSObject <CocoaWagonDelegate> *delegate;	
 	BOOL willPaginate;
@@ -37,6 +38,8 @@
 	NSMutableArray *rows;
 	BOOL containsErrorMessages;
 	NSMutableArray *newObjects;
+	NSString *objectId;
+	NSInteger action;
 	
 	NSUInteger currentPage;
 	NSUInteger totalPages;
@@ -54,6 +57,12 @@
 @property(nonatomic, retain) NSMutableArray *rows;
 @property(nonatomic, assign) BOOL containsErrorMessages;
 @property(nonatomic, retain) NSMutableArray *newObjects;
+@property(nonatomic, retain) NSString *objectId;
+@property(nonatomic) NSInteger action;
+
+@property(nonatomic) NSUInteger currentPage;
+@property(nonatomic) NSUInteger totalPages;
+
 
 
 
@@ -71,6 +80,8 @@
 
 -(BOOL)sendRequest:(NSMutableURLRequest *)theRequest;
 
+-(void)cancelConnection;
+
 /*
  * Returns YES if connection could be established. Otherwise NO. See CocoaWagonDelegate for accessing NSError which contains corresponding error messages
  */
@@ -79,6 +90,8 @@
 
 -(ActiveResourceObject *)new;
 -(BOOL)create:(ActiveResourceObject *)anObject;
+-(BOOL)update:(ActiveResourceObject *)anObject;
+-(BOOL)destroy:(ActiveResourceObject *)anObject;
 
 -(NSURL *)resourcesURL;
 

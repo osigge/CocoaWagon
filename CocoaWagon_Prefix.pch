@@ -5,7 +5,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 
-	#import "Constants.h"
+	#import "CWConstants.h"
 
 	// Removes NSLog on release builds
 	#ifndef __OPTIMIZE__

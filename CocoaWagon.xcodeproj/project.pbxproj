@@ -30,8 +30,8 @@
 		A363490A11B5344000D85EBE /* ActiveResourceObject.h in Headers */ = {isa = PBXBuildFile; fileRef = A363490811B5344000D85EBE /* ActiveResourceObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A363490911B5344000D85EBE /* ActiveResourceObject.m */; };
 		A3C87DF211BEAE1C005A3B5A /* PaginationProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C87DF111BEAE1C005A3B5A /* PaginationProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A3C91FBC11C7EC4700DE60D8 /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C91FBA11C7EC4700DE60D8 /* Constants.h */; };
-		A3C91FBD11C7EC4700DE60D8 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C91FBB11C7EC4700DE60D8 /* Constants.m */; };
+		A3C91FBC11C7EC4700DE60D8 /* CWConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C91FBA11C7EC4700DE60D8 /* CWConstants.h */; };
+		A3C91FBD11C7EC4700DE60D8 /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C91FBB11C7EC4700DE60D8 /* CWConstants.m */; };
 		A3C9224A11C9085200DE60D8 /* CWFile.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C9224811C9085200DE60D8 /* CWFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3C9224B11C9085200DE60D8 /* CWFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9224911C9085200DE60D8 /* CWFile.m */; };
 		A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -72,8 +72,8 @@
 		A363497E11B54BF400D85EBE /* ActiveResourceObjectTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveResourceObjectTest.h; sourceTree = "<group>"; };
 		A363497F11B54BF400D85EBE /* ActiveResourceObjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveResourceObjectTest.m; sourceTree = "<group>"; };
 		A3C87DF111BEAE1C005A3B5A /* PaginationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaginationProtocol.h; sourceTree = "<group>"; };
-		A3C91FBA11C7EC4700DE60D8 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		A3C91FBB11C7EC4700DE60D8 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		A3C91FBA11C7EC4700DE60D8 /* CWConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWConstants.h; sourceTree = "<group>"; };
+		A3C91FBB11C7EC4700DE60D8 /* CWConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWConstants.m; sourceTree = "<group>"; };
 		A3C9224811C9085200DE60D8 /* CWFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFile.h; sourceTree = "<group>"; };
 		A3C9224911C9085200DE60D8 /* CWFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWFile.m; sourceTree = "<group>"; };
 		A3F39E0E11B690FB00EFD2D4 /* CocoaWagonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWagonDelegate.h; sourceTree = "<group>"; };
@@ -153,8 +153,8 @@
 			isa = PBXGroup;
 			children = (
 				AA747D9E0F9514B9006C5449 /* CocoaWagon_Prefix.pch */,
-				A3C91FBA11C7EC4700DE60D8 /* Constants.h */,
-				A3C91FBB11C7EC4700DE60D8 /* Constants.m */,
+				A3C91FBA11C7EC4700DE60D8 /* CWConstants.h */,
+				A3C91FBB11C7EC4700DE60D8 /* CWConstants.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -197,7 +197,7 @@
 				A3F39E1111B6945E00EFD2D4 /* CocoaWagonDelegate.h in Headers */,
 				A3F39E8811B6A47D00EFD2D4 /* ActiveResourceProtocol.h in Headers */,
 				A3C87DF211BEAE1C005A3B5A /* PaginationProtocol.h in Headers */,
-				A3C91FBC11C7EC4700DE60D8 /* Constants.h in Headers */,
+				A3C91FBC11C7EC4700DE60D8 /* CWConstants.h in Headers */,
 				A3C9224A11C9085200DE60D8 /* CWFile.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -250,7 +250,14 @@
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "CocoaWagon" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* CocoaWagon */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -306,7 +313,7 @@
 			files = (
 				A36348D611B52FB600D85EBE /* CocoaWagon.m in Sources */,
 				A363490B11B5344000D85EBE /* ActiveResourceObject.m in Sources */,
-				A3C91FBD11C7EC4700DE60D8 /* Constants.m in Sources */,
+				A3C91FBD11C7EC4700DE60D8 /* CWConstants.m in Sources */,
 				A3C9224B11C9085200DE60D8 /* CWFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,9 +376,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1.2;
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -384,7 +392,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Release;
 		};
