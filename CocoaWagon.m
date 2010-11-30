@@ -80,7 +80,7 @@
 
 static NSString *baseURLString;
 
-@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentNodeValueCharacters, currentObject, apiKey, rows, containsErrorMessages, newObjects, totalPages, currentPage;
+@synthesize willPaginate, theConnection, receivedData, currentElementName, currentElementHasNodeValue, currentNodeValueCharacters, currentObject, apiKey, rows, containsErrorMessages, newObjects, totalPages, currentPage, objectId, action;
 
 -(id)init {	
 	self = [super init];
@@ -116,6 +116,7 @@ static NSString *baseURLString;
 	
 	if (self != nil) {
 		self.apiKey = aKey;
+		[self release];
 	}
 	
 	return self;
@@ -156,6 +157,7 @@ static NSString *baseURLString;
 	self.apiKey = nil;
 	self.rows = nil;
 	self.newObjects = nil;
+	self.objectId = nil;
 	[super dealloc];	
 }
 
@@ -178,6 +180,8 @@ static NSString *baseURLString;
 // ToDo: Consider moving methods like findAll to an ClassMethod to maintain classic ORM pattern
 
 -(BOOL)findAll:(NSInteger)page {
+	NSLog(@"COCOWAGON RETAIN COUNT findAll BEGIN: %i", [self retainCount]);
+	self.action = CWRead;
 	
 	NSURL *url;
 	
@@ -188,9 +192,10 @@ static NSString *baseURLString;
 	}
 	
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
-	
+	[theRequest setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];	
+	[theRequest addValue:@"application/xml" forHTTPHeaderField:@"Accept"];
+	NSLog(@"COCOWAGON RETAIN COUNT findAll END: %i", [self retainCount]);	
 	return [self sendRequest:theRequest];
-	
 }
 
 -(BOOL)findAll {
@@ -213,8 +218,10 @@ static NSString *baseURLString;
 }
 
 -(BOOL)create:(ActiveResourceObject *)anObject {
-	
+	self.action = CWCreate;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+	[theRequest setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];	
+	[theRequest addValue:@"application/xml" forHTTPHeaderField:@"Accept"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", MULTIPART_FORM_DATA_BOUNDARY] forHTTPHeaderField:@"Content-Type"];		
 	
@@ -223,6 +230,9 @@ static NSString *baseURLString;
 	NSEnumerator *enumerator = [[anObject dictionary] keyEnumerator];
 	NSString *key;
 	id object;
+	
+//	[anObject setObject:@"post" forKey:@"_method"];
+//	[anObject setObject:@"create" forKey:@"action"];
 	
 	while ((key = [enumerator nextObject])) {
 		
@@ -254,8 +264,125 @@ static NSString *baseURLString;
 	return [self sendRequest:theRequest];
 }
 
--(BOOL)sendRequest:(NSMutableURLRequest *)theRequest {
+- (BOOL)update:(ActiveResourceObject *)anObject {
+	self.action = CWUpdate;
+	self.objectId = [anObject objectForKey:@"id"];
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+	[theRequest setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];	
+	[theRequest addValue:@"application/xml" forHTTPHeaderField:@"Accept"];
+	[theRequest setHTTPMethod:@"PUT"];
+	[theRequest setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
+	[theRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", MULTIPART_FORM_DATA_BOUNDARY] forHTTPHeaderField:@"Content-Type"];
+	NSMutableData *putData = [NSMutableData new];
 	
+	NSEnumerator *enumerator = [[anObject dictionary] keyEnumerator];
+	NSString *key;
+	id object;
+	
+	while ((key = [enumerator nextObject])) {
+		
+		object = [anObject objectForKey:key];
+		if([object isKindOfClass:[NSNull class]] || 
+		   [key isEqualToString:@"id"] ||
+		   [key isEqualToString:@"createdAt"] ||
+		   [key isEqualToString:@"updatedAt"]){
+			object = nil;
+			continue;
+		}
+
+		[putData appendData:[[NSString stringWithFormat:@"--%@\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];
+		
+		NSString *scope = [NSString stringWithFormat:@"%@[%@]", [self resourceName], [key underscore]];
+		
+		if ([object isKindOfClass:[CWFile class]]) {
+			CWFile *payload = object;
+			[putData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\nContent-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", scope, payload.filename, payload.filetype] dataUsingEncoding:NSASCIIStringEncoding]];
+			[putData appendData:payload.filedata];								
+		} else {						
+			NSString *payload = object;			
+			[putData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", scope] dataUsingEncoding:NSASCIIStringEncoding]];			
+			[putData appendData:[payload dataUsingEncoding:NSASCIIStringEncoding]];			
+		}
+		
+		[putData appendData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
+		
+	}
+	
+	
+	NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"_method", @"put", 
+							@"action", @"update", 
+							@"id", [anObject objectForKey:@"id"],
+							@"controller", [[self resourceName] pluralize], nil];
+	
+	NSEnumerator *paramsEnumerator = [params keyEnumerator];
+	NSString *paramsKey;
+	id paramsValue;
+	
+	while ((paramsKey = [paramsEnumerator nextObject])) {
+		
+		paramsValue = [params objectForKey:paramsKey];
+		
+		[putData appendData:[[NSString stringWithFormat:@"--%@\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];
+		NSString *payload = paramsValue;			
+		[putData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", paramsKey] dataUsingEncoding:NSASCIIStringEncoding]];			
+		[putData appendData:[payload dataUsingEncoding:NSASCIIStringEncoding]];
+		[putData appendData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
+		
+	}
+	
+	[putData appendData:[[NSString stringWithFormat:@"--%@--\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];		
+	[theRequest setValue:[NSString stringWithFormat:@"%d", [putData length]] forHTTPHeaderField:@"Content-Length"];	
+
+	[theRequest setHTTPBody:putData];
+	[putData release];
+		
+	return [self sendRequest:theRequest];
+}
+
+-(BOOL)destroy:(ActiveResourceObject *)anObject{
+	self.action = CWDelete;
+	self.objectId = [anObject objectForKey:@"id"];
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[self resourcesURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+	[theRequest setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];	
+	[theRequest addValue:@"application/xml" forHTTPHeaderField:@"Accept"];
+	[theRequest setHTTPMethod:@"DELETE"];
+	[theRequest setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
+	[theRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", MULTIPART_FORM_DATA_BOUNDARY] forHTTPHeaderField:@"Content-Type"];
+	NSMutableData *destroyData = [NSMutableData new];
+	
+	NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"_method", @"delete", 
+							@"action", @"destroy", 
+							@"id", [anObject objectForKey:@"id"],
+							@"controller", [[self resourceName] pluralize], nil];
+	
+	NSEnumerator *enumerator = [params keyEnumerator];
+	NSString *paramsKey;
+	id object;
+	
+	while ((paramsKey = [enumerator nextObject])) {
+		
+		object = [params objectForKey:paramsKey];
+		
+		[destroyData appendData:[[NSString stringWithFormat:@"--%@\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];
+		NSString *payload = object;			
+		[destroyData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", paramsKey] dataUsingEncoding:NSASCIIStringEncoding]];			
+		[destroyData appendData:[payload dataUsingEncoding:NSASCIIStringEncoding]];
+		[destroyData appendData:[@"\r\n" dataUsingEncoding:NSASCIIStringEncoding]];
+		
+	}
+	
+	[destroyData appendData:[[NSString stringWithFormat:@"--%@--\r\n", MULTIPART_FORM_DATA_BOUNDARY] dataUsingEncoding:NSASCIIStringEncoding]];		
+	[theRequest setValue:[NSString stringWithFormat:@"%d", [destroyData length]] forHTTPHeaderField:@"Content-Length"];	
+	
+	[theRequest setHTTPBody:destroyData];
+	[destroyData release];
+	
+	return [self sendRequest:theRequest];
+}
+
+
+-(BOOL)sendRequest:(NSMutableURLRequest *)theRequest {
+	NSLog(@"COCOWAGON RETAIN COUNT sendRequest BEGIN: %i", [self retainCount]);
 	// ToDo: Send API key if it's present
 	
 	NSArray *availableCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:baseURLString]];
@@ -272,7 +399,10 @@ static NSString *baseURLString;
 	
 	self.theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	
-	if (self.theConnection) {
+	NSLog(@"COCOWAGON RETAIN COUNT sendRequest END: %i", [self retainCount]);
+	NSLog(@"URL -------  %@", [[theRequest URL] absoluteString]);
+	
+	if ([NSURLConnection canHandleRequest:theRequest]) {
 		self.receivedData = [NSMutableData data];
 		
 		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -298,6 +428,11 @@ static NSString *baseURLString;
 }
 
 
+-(void)cancelConnection{
+	[self.theConnection cancel];
+}
+
+
 #pragma mark NSURLConnection Delegates
 
 
@@ -314,6 +449,7 @@ static NSString *baseURLString;
 	if (all.count > 0) {
 		NSLog(@"Storing %d cookies", all.count);
 		[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookies:all forURL:[NSURL URLWithString:baseURLString] mainDocumentURL:nil];
+		NSLog(@"BaseURLString:%@", baseURLString);
 	}
 	
     [self.receivedData setLength:0];
@@ -354,7 +490,6 @@ static NSString *baseURLString;
 		if ([delegate respondsToSelector:@selector(willProcessData:)] ) {
 			[delegate willProcessData:self.receivedData];
 		}	
-		
 		if (![self processData:self.receivedData]) {
 			
 			if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
@@ -368,8 +503,8 @@ static NSString *baseURLString;
 		}
 		
 	} else {
-		if ([delegate respondsToSelector:@selector(didFinishWithResults:)]) {
-			[delegate didFinishWithResults:nil];
+		if ([delegate respondsToSelector:@selector(didFinishWithResults:fromClass:action:)]) {
+			[delegate didFinishWithResults:nil fromClass:self action:self.action];
 		}
 	}
 	
@@ -397,7 +532,7 @@ static NSString *baseURLString;
 	
     if ([elementName isEqualToString:[self resourcesName]]) { // Found root node
 		
-		NSLog(@"Found root node: %@", elementName);
+		//NSLog(@"Found root node: %@", elementName);
 		
 		if (self.willPaginate) {
 			self.totalPages = [[attributeDict objectForKey:@"total_pages"] intValue];
@@ -451,7 +586,7 @@ static NSString *baseURLString;
 				self.currentNodeValueCharacters = [NSMutableString stringWithCapacity:[string length]];
 			}
 			
-			NSLog(@"Collecting characters for field: %@\r\n%@", self.currentElementName, string);			
+			//NSLog(@"Collecting characters for field: %@\r\n%@", self.currentElementName, string);			
 			[self.currentNodeValueCharacters appendString:string];
 		}
 	}
@@ -467,7 +602,7 @@ static NSString *baseURLString;
 			self.currentNodeValueCharacters = nil;
 		}
 		
-		NSLog(@"Resource node done. Adding new object to array");
+		//NSLog(@"Resource node done. Adding new object to array");
 		[self.rows addObject:self.currentObject];	
 		self.currentElementName = nil;
 		
@@ -506,9 +641,9 @@ static NSString *baseURLString;
 			[delegate didFinishWithErrors:[NSArray arrayWithArray:errors]];		
 			[errors release];
 		}		
-	} else {		
-		if ([delegate respondsToSelector:@selector(didFinishWithResults:)]) {
-			[delegate didFinishWithResults:[NSArray arrayWithArray:self.rows]];
+	} else {
+		if ([delegate respondsToSelector:@selector(didFinishWithResults:fromClass:action:)]) {
+			[delegate didFinishWithResults:[NSArray arrayWithArray:self.rows] fromClass:self action:self.action];
 		}
 	}
 	
@@ -519,7 +654,14 @@ static NSString *baseURLString;
 #pragma mark ActiveResource Protocol
 
 -(NSURL *)resourcesURL {
-	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@", [self resourceBaseURL], [self resourcesName], [self format]]];
+	NSString *urlString;
+	if(self.objectId){
+		urlString = [NSString stringWithFormat:@"%@/%@/%@.%@", [self resourceBaseURL], [self resourcesName], self.objectId, [self format]];
+	}else {
+		urlString = [NSString stringWithFormat:@"%@/%@.%@", [self resourceBaseURL], [self resourcesName], [self format]];
+	}
+
+	return [NSURL URLWithString:urlString];
 }
 
 

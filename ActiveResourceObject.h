@@ -50,6 +50,8 @@
 -(NSDictionary *)dictionary;
 
 -(BOOL)save;
+-(BOOL)update;
+-(BOOL)destroy;
 
 -(BOOL)newRecord;
 

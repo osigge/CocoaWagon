@@ -31,7 +31,8 @@
 	self = [self init];
 	
 	if (self != nil) {
-		wagon = [aWagon retain];	
+//		wagon = [aWagon retain];	
+		wagon = aWagon;
 	}
 	
 	return self;
@@ -40,7 +41,7 @@
 
 -(void)dealloc {	
 	[dictionary release];
-	[wagon release];
+//	[wagon release];
 	[super dealloc];
 }
 
@@ -97,11 +98,16 @@
 -(BOOL)save {
 	if ([self newRecord]) {
 		return [wagon create:self];
-	} else {
-		// ToDo: Implement update incl. dirty object tracking		
 	}
-
 	return NO;
+}
+
+-(BOOL)update {
+	return [wagon update:self];	
+}
+
+-(BOOL)destroy {
+	return [wagon destroy:self];	
 }
 
 -(BOOL)newRecord {
