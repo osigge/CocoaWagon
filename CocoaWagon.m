@@ -476,7 +476,6 @@ static NSString *baseURLString;
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-	
     self.receivedData = nil;
 	
 	if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
