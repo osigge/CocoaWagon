@@ -91,8 +91,9 @@ static NSString *baseURLString;
 			[self release]; 
 			return nil; 
 		}
-		
-		self.rows = [[NSMutableArray new] autorelease];
+		NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:0];
+		self.rows = array;
+		[array release];
 	}
 	
 	return self;	
@@ -116,7 +117,7 @@ static NSString *baseURLString;
 	
 	if (self != nil) {
 		self.apiKey = aKey;
-		[self release];
+		//[self release];
 	}
 	
 	return self;
@@ -397,7 +398,9 @@ static NSString *baseURLString;
 		NSLog(@"HTTP Request Body: \r\n%@", [[[NSString alloc] initWithData:[theRequest HTTPBody] encoding:NSASCIIStringEncoding] autorelease]);
 	}
 	
-	self.theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	self.theConnection = connection;
+	[connection release];
 	
 	NSLog(@"COCOWAGON RETAIN COUNT sendRequest END: %i", [self retainCount]);
 	NSLog(@"URL -------  %@", [[theRequest URL] absoluteString]);
@@ -474,7 +477,6 @@ static NSString *baseURLString;
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	
-    [connection release];
     self.receivedData = nil;
 	
 	if ([delegate respondsToSelector:@selector(didFailWithError:)] ) {
@@ -508,7 +510,6 @@ static NSString *baseURLString;
 		}
 	}
 	
-    [connection release];
 	self.receivedData = nil;
 }
 
@@ -529,9 +530,8 @@ static NSString *baseURLString;
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-	
     if ([elementName isEqualToString:[self resourcesName]]) { // Found root node
-		
+		self.currentObject = [ActiveResourceObject withWagon:self];
 		//NSLog(@"Found root node: %@", elementName);
 		
 		if (self.willPaginate) {
@@ -550,13 +550,9 @@ static NSString *baseURLString;
 	} else if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) { // Found a relevant object node
 		
 		NSLog(@"Found resource node: %@", elementName);
-		
 		if (self.containsErrorMessages) {
-			self.currentObject = [[[ActiveResourceObject alloc] init] autorelease];
 			self.currentElementName = elementName;
 			self.currentElementHasNodeValue = YES;
-		} else {
-			self.currentObject = [ActiveResourceObject withWagon:self];
 		}
 		
     } else if (self.currentObject != nil) { // Within a relevant object node
@@ -583,7 +579,9 @@ static NSString *baseURLString;
 		if (self.currentElementHasNodeValue) { // It's some characters
 			
 			if (self.currentNodeValueCharacters == nil) { // Prepare container for collecting them
-				self.currentNodeValueCharacters = [NSMutableString stringWithCapacity:[string length]];
+				NSMutableString *newString = [[NSMutableString alloc] initWithCapacity:[string length]];
+				self.currentNodeValueCharacters = newString;
+				[newString release];
 			}
 			
 			//NSLog(@"Collecting characters for field: %@\r\n%@", self.currentElementName, string);			
@@ -594,30 +592,29 @@ static NSString *baseURLString;
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	
-	if ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"])) {
+	if (self.currentObject && ([elementName isEqualToString:[self resourceName]] || (self.containsErrorMessages && [elementName isEqualToString:@"error"]))) {
 		
 		if ((self.containsErrorMessages && [elementName isEqualToString:@"error"])) {			
 			NSLog(@"Content node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
 			[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
-			self.currentNodeValueCharacters = nil;
 		}
 		
 		//NSLog(@"Resource node done. Adding new object to array");
-		[self.rows addObject:self.currentObject];	
-		self.currentElementName = nil;
-		
+		[self.rows addObject:self.currentObject];
+		self.currentObject = nil;
 	} else if (self.currentElementName != nil) {
 		
 		if (self.currentNodeValueCharacters != nil) {		
 			NSLog(@"Content node done. Setting content for field: %@\r\n%@", self.currentElementName, self.currentNodeValueCharacters);		
 			[self.currentObject setObject:self.currentNodeValueCharacters forKey:[self.currentElementName camelize]];
-			self.currentNodeValueCharacters = nil;
 		} else {
 			NSLog(@"Content node done. There weren't any characters found for: %@", self.currentElementName);	
 			[self.currentObject setObject:[NSNull null] forKey:[self.currentElementName camelize]];
 		}
-		self.currentElementName = nil;
 	}
+	
+	self.currentNodeValueCharacters = nil;
+	self.currentElementName = nil;
 }
 
 /*

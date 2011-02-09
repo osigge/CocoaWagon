@@ -11,7 +11,7 @@
 
 @implementation ActiveResourceObject
 
-@synthesize primaryKey;
+@synthesize primaryKey, wagon;
 
 // ToDo: Forward remote actions to wagon instance unless it's nil
 
@@ -31,8 +31,8 @@
 	self = [self init];
 	
 	if (self != nil) {
-//		wagon = [aWagon retain];	
-		wagon = aWagon;
+		self.wagon = aWagon;	
+		//wagon = aWagon;
 	}
 	
 	return self;
@@ -41,7 +41,7 @@
 
 -(void)dealloc {	
 	[dictionary release];
-//	[wagon release];
+	self.wagon = nil;
 	[super dealloc];
 }
 
@@ -97,17 +97,17 @@
 
 -(BOOL)save {
 	if ([self newRecord]) {
-		return [wagon create:self];
+		return [self.wagon create:self];
 	}
 	return NO;
 }
 
 -(BOOL)update {
-	return [wagon update:self];	
+	return [self.wagon update:self];	
 }
 
 -(BOOL)destroy {
-	return [wagon destroy:self];	
+	return [self.wagon destroy:self];	
 }
 
 -(BOOL)newRecord {

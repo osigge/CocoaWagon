@@ -55,4 +55,6 @@
 
 -(BOOL)newRecord;
 
+@property(nonatomic, retain) CocoaWagon *wagon;
+
 @end
